@@ -1,0 +1,33 @@
+---
+output: 
+  pdf_document:
+    number_sections: false
+    latex_engine: xelatex
+header-includes:
+  - \usepackage{setspace}
+  - \onehalfspacing
+  - \usepackage{ragged2e}
+  - \AtBeginDocument{\justifying}
+  - \usepackage{graphicx}
+  - \usepackage{caption}
+  - \captionsetup[table]{labelformat=empty}
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+# Resultados de la Tarea 2: Consumo
+
+Este documento contiene los resultados obtenidos de los ejercicios 5, 6 y 7.
+
+## Ejercicio 5: Comportamiento reciente del consumo en México y sus determinantes
+
+*(Resultados pendientes de ejecución)*
+
+## Ejercicio 6: Nivel de riqueza neta de los hogares (ENFIH-2019)
+
+*(Resultados pendientes de ejecución)*
+
+## Ejercicio 7: Acertijo del premio al riesgo
+
+*(Resultados pendientes de ejecución)*
