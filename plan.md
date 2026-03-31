@@ -1,57 +1,56 @@
-# Plan de Trabajo - Tarea 2: Macroeconomía (Consumo)
+# Plan de Trabajo - Tarea 2: Consumo, Macroeconomía 2
 
-Este plan detalla los pasos para completar los ejercicios 5, 6 y 7 de la Tarea 2, utilizando datos de INEGI, Banxico y fuentes financieras.
-
-## Ejercicio 5: Comportamiento reciente del consumo en México y sus determinantes
-
-### 1. Investigación y Obtención de Datos
-*   **Paso 1.0:** Explícame la relación teórica entre el consumo agregado, la tasa de interés real y el tipo de cambio en un formato de diálogo y al final guarda el resultado en un archivo `Teoria_Consumo.md`.
-*   **Paso 1.1:** Investigar en el BIE (INEGI) los identificadores de las series de Consumo privado total, de bienes nacionales e importados.
-*   **Paso 1.2:** Investigar en el SIE (Banxico) los identificadores para el Tipo de Cambio FIX y la Tasa de Interés Real (o nominal e inflación para calcularla).
-*   **Paso 1.3:** Crear el script `05_01_descarga_datos.R` para obtener y alinear las series trimestrales.
-
-### 2. Procesamiento y Análisis
-*   **Paso 2.1:** Crear el script `05_02_analisis_ciclico.R` para:
-    *   Graficar series en niveles y logaritmos con marcos negros según el mandato.
-    *   Calcular la tasa de crecimiento anual para eliminar la tendencia.
-    *   Graficar las series filtradas y calcular la matriz de varianza-covarianza.
-*   **Paso 2.2:** Realizar el análisis cualitativo sobre el impacto del tipo de cambio y las tasas en el consumo.
-
-### 3. Reporte de Resultados
-*   **Paso 3.1:** Actualizar `Resultados.Rmd` con las gráficas, la matriz de covarianza y la conclusión redactada (Inciso e).
+Este plan detalla los pasos para completar los ejercicios 5, 6 y 7 de la Tarea 2 sobre Consumo, utilizando datos de INEGI, Banco de México y Yahoo Finance.
 
 ---
 
-## Ejercicio 6: Nivel de riqueza neta de los hogares (ENFIH-2019)
+## 5. Ejercicio 5: Comportamiento reciente del consumo en México
 
-### 1. Investigación y Obtención de Datos
-*   **Paso 1.0:** Explícame qué es la ENFIH, cuál es su objetivo y cómo se define técnicamente la "Riqueza Neta" en sus microdatos en un formato de diálogo y guarda el resultado en `Info_ENFIH.md`.
-*   **Paso 1.1:** Localizar los microdatos de la ENFIH 2019 en el sitio del INEGI y verificar la estructura de las tablas de activos y pasivos.
+### 1. Investigación y Teoría
+*   **Paso 1.0:** Explícame la relación teórica entre el consumo agregado, la tasa de interés real y el tipo de cambio y qué son los filtros de series de tiempo. [Contexto General]
+*   **Paso 1.1:** Obtener datos trimestrales de "C", bienes nacionales e importados. **[Inciso 5a]**
+*   **Paso 1.2:** Obtener datos de tipo de cambio y tasa de interés REAL. **[Inciso 5b]**
 
-### 2. Procesamiento y Análisis
-*   **Paso 2.1:** Crear el script `06_01_procesar_enfih.R` para:
-    *   Cargar y limpiar los microdatos.
-    *   Calcular la riqueza neta por hogar y tabularla por tamaño de localidad (Inciso b).
-    *   Generar el gráfico de dispersión Ingreso vs Riqueza (Inciso c).
-    *   Tabular las estrategias ante gastos imprevistos (Inciso d).
+### 2. Procesamiento y Análisis en R
+*   **Paso 1.3:** Crear el script `05_01_datos_consumo.R` para descarga y limpieza. **[Incisos 5a, 5b]**
+*   **Paso 1.4:** Crear el script `05_02_analisis_ciclico.R`.
+    *   Graficar series para compararlas visualmente. **[Inciso 5c]**
+    *   Filtrar series para remover tendencia (tasa de cambio anual). **[Inciso 5d]**
+    *   Obtener matriz de varianzas y covarianzas. **[Inciso 5d]**
 
 ### 3. Reporte de Resultados
-*   **Paso 3.1:** Documentar los tabulados y gráficas en `Resultados.Rmd`, asegurando que los porcentajes incluyan su método de cálculo.
+*   **Paso 1.5:** Redactar conclusión sobre el impacto de la tasa de interés y tipo de cambio en el consumo. **[Inciso 5e]**
 
 ---
 
-## Ejercicio 7: Acertijo del premio al riesgo
+## 6. Ejercicio 6: Riqueza neta de los hogares (ENFIH-2019)
 
-### 1. Investigación y Obtención de Datos
-*   **Paso 1.0:** Explícame en qué consiste el "Equity Premium Puzzle" (Acertijo del premio al riesgo) y por qué es relevante para la macroeconomía en un formato de diálogo y guarda el resultado en `Acertijo_Riesgo.md`.
-*   **Paso 1.1:** Obtener series anuales desde 1990 de IPC, IPyC (México), NASDAQ (EE.UU.) y TSX (Canadá) usando APIs financieras.
-*   **Paso 1.2:** Obtener las tasas libres de riesgo correspondientes para cada país.
+### 1. Investigación y Teoría
+*   **Paso 2.0:** Explícame qué es la ENFIH y cómo se define técnicamente la "Riqueza Neta". [Contexto General]
+*   **Paso 2.1:** Obtener los microdatos de la ENFIH-2019. **[Inciso 6a]**
 
-### 2. Procesamiento y Análisis
-*   **Paso 2.1:** Crear el script `07_01_calculo_rra.R` para:
-    *   Calcular retornos reales y premios por riesgo.
-    *   Calcular la covarianza entre el premio al riesgo y el crecimiento del consumo (agregado y por componentes en México).
-    *   Estimar el coeficiente de aversión relativa al riesgo (RRA).
+### 2. Procesamiento de Microdatos
+*   **Paso 2.2:** Crear el script `06_01_procesar_enfih.R`.
+    *   Tabular el nivel de riqueza neta por tamaño de localidad. **[Inciso 6b]**
+    *   Generar gráfica de dispersión entre ingreso corriente efectivo y riqueza neta. **[Inciso 6c]**
+    *   Tabular respuestas sobre formas de atender gastos imprevistos. **[Inciso 6d]**
 
 ### 3. Reporte de Resultados
-*   **Paso 3.1:** Documentar los coeficientes RRA encontrados en `Resultados.Rmd` y discutir si los valores son "razonables" o confirman el acertijo.
+*   **Paso 2.4:** Interpretar la gráfica, el tabulado y los resultados a la luz de las variables agregadas. **[Inciso 6e, 6f]**
+
+---
+
+## 7. Ejercicio 7: Acertijo del premio al riesgo
+
+### 1. Investigación y Teoría
+*   **Paso 3.0:** Explícame en qué consiste el "Equity Premium Puzzle" y la teoría de la utilidad CRRA. [Contexto General]
+*   **Paso 3.1:** Obtener valores anuales de IPC, IPyC (MX), NASDAQ (US) y TSX (Canadá) e identificar tasas libres de riesgo. **[Incisos 7a, 7b, 7c]**
+
+### 2. Cálculo de Aversión al Riesgo
+*   **Paso 3.2:** Crear el script `07_01_calculo_rra.R`.
+    *   Calcular covarianzas entre diferencias (retornos) y crecimiento del consumo. **[Incisos 7d, 7e, 7f]**
+    *   Calcular valor de aversión relativa al riesgo ($\gamma$). **[Inciso 7g]**
+    *   Caso México: Calcular covarianzas por tipo de consumo (durables, servicios, importados). **[Inciso 7h, 7i]**
+
+### 3. Reporte de Resultados
+*   **Paso 3.3:** Interpretar los resultados internacionales y por tipo de consumo. **[Inciso 7j]**
