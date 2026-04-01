@@ -8,70 +8,76 @@ library(tidyr)
 df <- read.csv("output/consumo_limpio.csv")
 df$date <- as.Date(df$date)
 
-# 2. Aplicar Filtro Hodrick-Prescott (lambda = 1600 para datos trimestrales)
-# Trabajaremos con los logaritmos para obtener variaciones porcentuales aproximadas
+# 2. [Inciso 5c] Graficar series de tiempo juntas (Niveles)
+df_niveles <- df %>%
+  select(date, total, nacional, importado) %>%
+  melt(id.vars = "date")
+
+p_niveles <- ggplot(df_niveles, aes(x = date, y = value / 1e6, color = variable)) +
+  geom_line(linewidth = 1) +
+  labs(title = "Consumo Privado en México (Niveles)",
+       subtitle = "Millones de pesos a precios constantes de 2018",
+       x = "Año", y = "Millones de Pesos", color = "Serie") +
+  theme_minimal() +
+  scale_color_manual(values = c("black", "blue", "red"))
+
+ggsave("output/grafica_5c_niveles.png", p_niveles, width = 10, height = 6)
+
+# 3. [Inciso 5d] Filtrado por Tasa de Cambio Anual (Growth Rates)
+# La tasa anual se calcula como (y_t / y_{t-4}) - 1
+df_growth <- df %>%
+  arrange(date) %>%
+  mutate(
+    growth_total = (total / lag(total, 4)) - 1,
+    growth_nacional = (nacional / lag(nacional, 4)) - 1,
+    growth_importado = (importado / lag(importado, 4)) - 1
+  ) %>%
+  filter(!is.na(growth_total))
+
+# Graficar tasas de crecimiento anual juntas
+df_growth_long <- df_growth %>%
+  select(date, growth_total, growth_nacional, growth_importado) %>%
+  melt(id.vars = "date")
+
+p_growth <- ggplot(df_growth_long, aes(x = date, y = value, color = variable)) +
+  geom_line(linewidth = 1) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(title = "Tasas de Crecimiento Anual del Consumo",
+       subtitle = "Variación porcentual respecto al mismo trimestre del año anterior",
+       x = "Año", y = "Tasa de Crecimiento", color = "Serie") +
+  scale_y_continuous(labels = scales::percent) +
+  theme_minimal() +
+  scale_color_manual(values = c("black", "blue", "red"))
+
+ggsave("output/grafica_5d_growth.png", p_growth, width = 10, height = 6)
+
+# Matriz de Varianza-Covarianza de las tasas de crecimiento
+var_cov_growth <- cov(df_growth %>% select(growth_total, growth_nacional, growth_importado))
+write.csv(var_cov_growth, "output/matriz_var_cov_growth.csv")
+
+# 4. Mantener análisis de Filtro HP (ya realizado pero consolidado)
 hp_filter_cycle <- function(series) {
   l_series <- log(series)
   hp <- hpfilter(l_series, freq = 1600)
   return(as.numeric(hp$cycle))
 }
 
-df <- df %>%
+df_hp <- df %>%
   mutate(
     ciclo_total = hp_filter_cycle(total),
     ciclo_nacional = hp_filter_cycle(nacional),
     ciclo_importado = hp_filter_cycle(importado)
   )
 
-# 3. Calcular Correlaciones
-# Seleccionamos las variables de interés: ciclos de consumo, tasa real y tc_fix
-var_interes <- df %>%
-  select(ciclo_total, ciclo_nacional, ciclo_importado, tasa_real, tc_fix)
+# Resumen estadístico consolidado
+resumen <- data.frame(
+  Variable = c("Total", "Nacional", "Importado"),
+  Volatilidad_HP = c(sd(df_hp$ciclo_total) * 100, sd(df_hp$ciclo_nacional) * 100, sd(df_hp$ciclo_importado) * 100),
+  Volatilidad_Growth = c(sd(df_growth$growth_total) * 100, sd(df_growth$growth_nacional) * 100, sd(df_growth$growth_importado) * 100),
+  Cor_TasaReal_HP = c(cor(df_hp$ciclo_total, df_hp$tasa_real, use="pairwise"), NA, NA),
+  Cor_TCFix_HP = c(cor(df_hp$ciclo_total, df_hp$tc_fix, use="pairwise"), NA, NA)
+)
 
-cor_matrix <- cor(var_interes, use = "complete.obs")
-write.csv(cor_matrix, "output/matriz_correlacion.csv")
+write.csv(resumen, "output/resumen_ejercicio_5.csv", row.names = FALSE)
 
-# 4. Generar Gráficas
-# Gráfica 1: Componentes Cíclicos del Consumo
-df_long <- df %>%
-  select(date, ciclo_total, ciclo_nacional, ciclo_importado) %>%
-  melt(id.vars = "date")
-
-p1 <- ggplot(df_long, aes(x = date, y = value, color = variable)) +
-  geom_line(size = 1) +
-  labs(title = "Componentes Cíclicos del Consumo en México (Filtro HP)",
-       subtitle = "Log-desviaciones de la tendencia (lambda = 1600)",
-       x = "Año", y = "Ciclo", color = "Serie") +
-  theme_minimal() +
-  scale_color_manual(values = c("black", "blue", "red"))
-
-ggsave("output/grafica_ciclos_consumo.png", p1, width = 10, height = 6)
-
-# Gráfica 2: Consumo Total vs Tasa Real (Normalizados para visualización)
-p2 <- ggplot(df, aes(x = date)) +
-  geom_line(aes(y = ciclo_total, color = "Ciclo Consumo Total"), size = 1) +
-  geom_line(aes(y = tasa_real / 10, color = "Tasa Real (Escala 1/10)"), linetype = "dashed") +
-  labs(title = "Ciclo del Consumo vs Tasa de Interés Real",
-       x = "Año", y = "Valor", color = "Variable") +
-  theme_minimal()
-
-ggsave("output/grafica_consumo_vs_tasa.png", p2, width = 10, height = 6)
-
-# 5. Guardar resumen estadístico para Resultados.Rmd
-resumen <- df %>%
-  summarise(
-    sd_total = sd(ciclo_total, na.rm = TRUE) * 100,
-    sd_nacional = sd(ciclo_nacional, na.rm = TRUE) * 100,
-    sd_importado = sd(ciclo_importado, na.rm = TRUE) * 100,
-    cor_tasa = cor(ciclo_total, tasa_real, use = "pairwise.complete.obs"),
-    cor_tc = cor(ciclo_total, tc_fix, use = "pairwise.complete.obs")
-  )
-
-write.csv(resumen, "output/resumen_estadistico.csv", row.names = FALSE)
-
-cat("Análisis cíclico completado.\n")
-cat("Artefactos generados en la carpeta output/:\n")
-cat("- grafica_ciclos_consumo.png\n")
-cat("- grafica_consumo_vs_tasa.png\n")
-cat("- matriz_correlacion.csv\n")
-cat("- resumen_estadistico.csv\n")
+cat("Análisis del Ejercicio 5 (Incisos c y d) completado.\n")

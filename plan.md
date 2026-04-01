@@ -27,7 +27,7 @@ Este plan detalla los pasos para completar los ejercicios 5, 6 y 7 de la Tarea 2
 
 ### 1. Investigación y Teoría
 
-* **Paso 2.0:** Explicación técnica sobre la ENFIH y la definición de Riqueza Neta. [Contexto General]
+* **Paso 2.0:** [x] Explicación técnica sobre la ENFIH y la definición de Riqueza Neta. (Completado en respuesta de Gemini). [Contexto General]
 
 ### 2. Obtención de Datos (Manual)
 

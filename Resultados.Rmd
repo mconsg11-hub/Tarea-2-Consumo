@@ -22,12 +22,141 @@ Este documento contiene los resultados obtenidos de los ejercicios 5, 6 y 7.
 
 ## Ejercicio 5: Comportamiento reciente del consumo en México y sus determinantes
 
-*(Resultados pendientes de ejecución)*
+**(a) Obtenga datos trimestrales de México, para “C”, el consumo agregado, el consumo agregado bienes importados y nacionales.**
+
+Los datos fueron obtenidos del Banco de Información Económica (BIE) del INEGI, utilizando las series desestacionalizadas a precios constantes de 2018 para el periodo 2000-2023.
+
+**(b) Obtenga datos para el tipo de cambio y la tasa de interés REAL del Banco de México.**
+
+Se utilizaron las series del Sistema de Información Económica (SIE) de BANXICO: el Tipo de Cambio FIX y la tasa de Cetes a 28 días. La tasa de interés real se calculó utilizando la ecuación de Fisher: $r_t = \frac{1+i_t}{1+\pi_t} - 1$, donde $\pi_t$ es la inflación trimestral anualizada.
+
+**(c) Grafique las series de tiempo juntas para compararlas visualmente.**
+
+En la siguiente gráfica se observa la evolución de los tres componentes del consumo. Destaca la caída pronunciada en el consumo de bienes importados durante las crisis de 2009 y 2020, evidenciando su alta sensibilidad a choques macroeconómicos.
+
+![Comparación visual del consumo en niveles](output/grafica_5c_niveles.png)
+
+**(d) Filtre todas las series para remover la tendencia por medio de obtener su tasa de cambio anual, grafique las series filtradas juntas para identificar sus movimientos cíclicos y obtenga su matriz de varianzas y covarianzas.**
+
+Se aplicó el filtro de tasa de crecimiento anual para aislar el componente cíclico. La volatilidad (desviación estándar) del consumo importado (11.38%) resultó ser significativamente mayor que la del consumo nacional (4.20%).
+
+![Tasas de crecimiento anual (Ciclos)](output/grafica_5d_growth.png)
+
+**Matriz de Varianza-Covarianza de las Tasas de Crecimiento:**
+
+| Componente | Total | Nacional | Importado |
+|------------|-------|----------|-----------|
+| **Total** | 0.001976 | 0.001818 | 0.004282 |
+| **Nacional** | 0.001818 | 0.001766 | 0.003441 |
+| **Importado** | 0.004282 | 0.003441 | 0.012943 |
+
+**(e) Redacte una conclusión sobre el impacto del de la tasa de interés y el tipo de cambio sobre el consumo.**
+
+Con base en el análisis de correlaciones del componente cíclico (Filtro HP), se concluye lo siguiente:
+
+1.  **Tipo de Cambio:** Existe una correlación negativa de **-0.151** entre el consumo total y el tipo de cambio. Esto indica que una depreciación del peso mexicano tiende a reducir el consumo agregado. El canal principal es el encarecimiento de los bienes importados (efecto precio relativo) y la posible reducción de la riqueza neta de los hogares con deuda o compromisos en moneda extranjera.
+2.  **Tasa de Interés Real:** Se observa una correlación positiva débil de **0.103**. Este resultado, aunque contraintuitivo respecto al efecto sustitución (que sugeriría una relación negativa), refleja la realidad de la economía mexicana donde los incrementos en la tasa real coinciden con periodos de expansión económica impulsados por la demanda externa. Además, sugiere que el **efecto ingreso** de los ahorradores o la expansión del crédito durante las fases de auge compensan el desincentivo al consumo presente derivado de mayores tasas.
+3.  **Diferenciación por origen:** La volatilidad extrema del consumo importado confirma que este rubro actúa como el principal "amortiguador" del gasto de los hogares ante choques en el tipo de cambio y las condiciones financieras internacionales.
+
+---
 
 ## Ejercicio 6: Nivel de riqueza neta de los hogares (ENFIH-2019)
 
-*(Resultados pendientes de ejecución)*
+**(a) Baje los microdatos de la ENFIH del sitio del INEGI.**
+
+Se descargaron los microdatos de la Encuesta Nacional sobre las Finanzas de los Hogares (ENFIH) 2019. Se utilizaron principalmente las tablas concentradora y de módulos.
+
+**(b) Tabule el nivel de riqueza neta de los hogares de acuerdo al tamaño de la localidad en la que radican.**
+
+Se calculó la riqueza neta media ponderada por el factor de expansión (`FAC_HOG`). Los resultados muestran una correlación positiva entre el tamaño de la localidad y el nivel de riqueza acumulada.
+
+| Tamaño de Localidad | Riqueza Neta Media | Activos Medios | Deuda Media |
+|---------------------|--------------------|----------------|-------------|
+| 100,000 y más hab   | $882,310           | $945,379       | $63,069     |
+| 15,000 a 99,999 hab | $750,773           | $789,290       | $38,517     |
+| 2,500 a 14,999 hab  | $660,145           | $688,938       | $28,793     |
+| Menos de 2,500 hab  | $553,436           | $569,578       | $16,142     |
+
+**(c) Haga una gráfica de dispersión de la relación entre el ingreso corriente efectivo de los hogares y la riqueza neta.**
+
+La gráfica de dispersión (en escala logarítmica) revela una relación positiva y significativa entre el ingreso mensual y la riqueza neta. Sin embargo, existe una alta dispersión en los niveles bajos de ingreso, lo que sugiere que factores como la herencia o la antigüedad del hogar (teoría del ciclo de vida) juegan un papel crucial en la acumulación de activos.
+
+![Relación Ingreso vs Riqueza Neta](output/grafica_6c_dispersion.png)
+
+**(d) Haga un tabulado de las respuestas sobre la forma en que atienden gastos imprevistos, de acuerdo al tamaño de la localidad en la que radican.**
+
+Se analizó la proporción de hogares que recurrieron a diferentes mecanismos para solventar emergencias financieras en los últimos 12 meses:
+
+| Tamaño de Localidad | Uso de Ahorros (%) | Ayuda Familiares (%) | Préstamos (%) |
+|---------------------|--------------------|----------------------|---------------|
+| 100,000 y más hab   | 2.40%              | 19.86%               | 10.57%        |
+| 15,000 a 99,999 hab | 3.75%              | 18.56%               | 13.31%        |
+| 2,500 a 14,999 hab  | 3.24%              | 12.91%               | 14.70%        |
+| Menos de 2,500 hab  | 2.43%              | 12.95%               | 18.39%        |
+
+**(e) Interprete la gráfica y el tabulado.**
+
+1.  **Interpretación de la Riqueza (Inciso c):** La pendiente positiva de la línea de ajuste confirma que mayores ingresos permiten una mayor tasa de ahorro y acumulación de capital. No obstante, la persistencia de hogares con alta riqueza pero ingresos moderados sugiere la importancia de los activos no financieros (vivienda propia) en el balance de las familias mexicanas.
+2.  **Interpretación de Imprevistos (Inciso d):** Se observa una dependencia crítica de las redes de apoyo informal (familiares) en zonas urbanas y del crédito (posiblemente informal o de cajas de ahorro) en zonas rurales. El bajísimo porcentaje de uso de ahorros propios (menor al 4% en todos los estratos) evidencia una falta de fondos de emergencia, lo que hace al consumo de los hogares muy vulnerable ante choques negativos de ingreso o salud.
+
+---
 
 ## Ejercicio 7: Acertijo del premio al riesgo
 
-*(Resultados pendientes de ejecución)*
+**(a) Consiga los valores anuales de IPC, el Indice de Precios y Cotizaciones de la Bolsa Mexicana de Valores, del NASDAQ y de otro índice de acciones (Ej 3: Canadá, TSX) por lo menos desde 1990.**
+
+Se obtuvieron los rendimientos anuales históricos (1990-2024) para el IPC (México), NASDAQ (EE. UU.) y el S&P/TSX Composite (Canadá).
+
+**(b) Calcule su tasa de retorno nominal para cada año.**
+
+Se calcularon los rendimientos nominales $r_{s,t}$ para cada índice a partir de la variación porcentual anual de sus niveles de cierre. En la siguiente gráfica se observa la evolución de los rendimientos nominales anuales para los tres índices analizados. Destaca la alta volatilidad del NASDAQ en comparación con el TSX y el IPC.
+
+![Rendimientos Nominales Anuales (1990-2024)](output/grafica_7b_retornos.png)
+
+**(c) Consiga los valores promedio anual de la tasa de interés de la tasa de interés a la que el gobierno de cada país se presta dinero, para los tres países.**
+
+Se utilizaron las tasas de Cetes a 28 días para México y las tasas de las Letras del Tesoro (T-Bills) a 3 meses para EE. UU. y Canadá. A continuación se presentan los promedios históricos para el periodo 1990-2024:
+
+| País | Instrumento de Deuda | Tasa de Interés Promedio (Anual) |
+|------|----------------------|----------------------------------|
+| México | Cetes 28 días | 11.85% |
+| EE. UU. | T-Bill 3 meses | 2.73% |
+| Canadá | T-Bill 3 meses | 3.29% |
+
+La siguiente gráfica muestra la evolución de estas tasas, donde se aprecia la mayor volatilidad y nivel de la tasa mexicana, especialmente durante la crisis de 1995 y el periodo reciente de inflación elevada.
+
+![Evolución de las Tasas Libres de Riesgo (1990-2024)](output/grafica_7c_rf.png)
+
+**(d) Calcule la diferencia entre el retorno del mercado de valores y el retorno de invertir
+a la tasa a un año.**
+
+Se calculó el exceso de retorno o premio por riesgo medio para cada país, definido como el rendimiento del mercado accionario por encima de la tasa libre de riesgo gubernamental ($E[r_s - r_f]$). A continuación, se comparan estos valores con la tasa de crecimiento promedio del consumo real de los hogares:
+
+| País | Premio por Riesgo Medio ($r_s - r_f$) | Crecimiento del Consumo Real ($\Delta c/c$) |
+|------|---------------------------------------|-------------------------------------------|
+| México | 6.41% | 2.58% |
+| EE. UU. | 12.28% | 2.66% |
+| Canadá | 3.26% | 2.48% |
+
+Se observa que en todos los casos el premio por riesgo es significativamente superior a la tasa de crecimiento del consumo, siendo especialmente alta la brecha en EE. UU. (NASDAQ), donde el premio por riesgo es casi **4.6 veces mayor** que el crecimiento del consumo.
+
+**(e) Calcule el valor de aversión relativa al riesgo que implican estos números, dado el supuesto de una utilidad con forma ARRC.**
+
+Utilizando la fórmula del *Equity Premium Puzzle*:
+$$\gamma = \frac{E[r_s - r_f]}{\text{Cov}(r_s - r_f, \Delta c/c)}$$
+
+Los coeficientes de aversión al riesgo relativo ($\gamma$) obtenidos son:
+
+| País | Premio por Riesgo Medio ($E[r_s - r_f]$) | Covarianza ($r_s - r_f, \Delta c/c$) | Coeficiente $\gamma$ Estimado |
+|------|------------------------------------------|--------------------------------------|-------------------------------|
+| México | 6.41% | 0.002025 | **31.66** |
+| Canadá | 3.26% | 0.000336 | **97.17** |
+| EE. UU. (NASDAQ) | 12.28% | -0.000067 | **-1837.19** |
+
+**(f) Interprete sus resultados.**
+
+1.  **Confirmación del Acertijo:** En el caso de México ($\gamma = 31.66$) y Canadá ($\gamma = 97.17$), los valores de aversión al riesgo son extremadamente altos. La teoría económica tradicional considera que un valor de $\gamma > 10$ es difícil de justificar psicológicamente, ya que implicaría que los individuos están dispuestos a pagar sumas absurdas por evitar riesgos mínimos. Esto confirma la presencia del **Equity Premium Puzzle** en estas economías: el consumo es "demasiado suave" para explicar por qué las acciones pagan tanto más que los bonos.
+2.  **El Caso del NASDAQ:** El valor negativo obtenido para el NASDAQ se debe a una covarianza negativa en la muestra anual. Esto indica que el modelo de utilidad CRRA estándar tiene dificultades para capturar la dinámica de activos de crecimiento (growth) como los tecnológicos, los cuales pueden subir incluso cuando el consumo se contrae (ej. durante la digitalización forzada en la pandemia de 2020).
+3.  **Conclusión:** Los resultados sugieren que el modelo básico de consumo basado en activos financieros es insuficiente para explicar las primas de riesgo observadas, lo que apunta a la necesidad de considerar otros factores como fricciones de mercado, costos de transacción o preferencias no separables.
+
+---

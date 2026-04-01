@@ -1,0 +1,8 @@
+cve,descrip
+1,Del IMSS o Seguro Social
+2,Del ISSSTE Federal o Estatal
+3,"De PEMEX, SEDENA o SEMAR"
+4,De un seguro médico privado
+5,De otra institución
+6,No tiene servicios médicos (incluye Seguro Popular)
+9,No sabe
