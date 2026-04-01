@@ -1,74 +1,95 @@
-# Script 05_01_limpieza_consumo.R (Versión 4 - Final)
-# Objetivo: Limpiar y unir series con manejo avanzado de fechas y codificación.
-# Autor: Gemini CLI
-
-# Cargar librerías
-if (!require("readr")) install.packages("readr")
-if (!require("dplyr")) install.packages("dplyr")
-if (!require("lubridate")) install.packages("lubridate")
-library(readr)
+library(RSQLite)
 library(dplyr)
+library(tidyr)
 library(lubridate)
-# 1. Función para leer Banxico ignorando errores de formato y notas
-leer_banxico <- function(archivo, nombre_col) {
-  print(paste("Leyendo:", archivo))
-  # Leer todo el archivo como texto primero
-  lineas <- read_lines(archivo, locale = locale(encoding = "ISO-8859-1"))
-  # Buscar la línea donde empiezan los datos (donde está el encabezado "Fecha")
-  inicio <- which(lineas == '"Fecha","SF43718"' | lineas == '"Fecha","SF43936"' | lineas == '"Fecha","SP30562"' | grepl("Fecha", lineas))[1]
-  # Leer desde ahí
-  datos <- read_csv(archivo, skip = inicio - 1, show_col_types = FALSE, locale = locale(encoding = "ISO-8859-1"))
-  colnames(datos) <- c("fecha_raw", "valor_raw")
-  # Limpiar datos: Convertir fecha y valor, tirar lo que no sirva
-  datos_limpios <- datos %>%
-    mutate(
-      # Extraer solo números y diagonales de la fecha
-      fecha_limpia = gsub("[^0-9/]", "", as.character(fecha_raw)),
-      fecha = dmy(fecha_limpia),
-      # Convertir valor a número (maneja N/E o espacios)
-      valor = as.numeric(as.character(valor_raw))
-    ) %>%
-    filter(!is.na(fecha), !is.na(valor)) %>%
-    select(fecha, valor)
-  colnames(datos_limpios) <- c("fecha", nombre_col)
-  return(datos_limpios)
-}
-# 2. Ejecutar Limpieza
-try({
-  # Leer archivos de Banxico
-  df_fix <- leer_banxico("input/tc_fix.csv", "tc_fix")
-  df_tasa <- leer_banxico("input/tasa_nominal.csv", "tasa_nom")
-  df_inpc <- leer_banxico("input/inflacion.csv", "inpc")
-  # Calcular Tasa Real
-  banxico <- df_inpc %>%
-    mutate(fecha = floor_date(fecha, "month")) %>%
-    arrange(fecha) %>%
-    mutate(inf_mensual = (inpc / lag(inpc) - 1) * 100) %>%
-    inner_join(mutate(df_tasa, fecha = floor_date(fecha, "month")), by = "fecha") %>%
-    inner_join(mutate(df_fix, fecha = floor_date(fecha, "month")), by = "fecha") %>%
-    mutate(
-      inf_anual = ((1 + inf_mensual/100)^12 - 1) * 100,
-      tasa_real = tasa_nom - inf_anual
-    ) %>%
-    mutate(year = year(fecha), trimestre = quarter(fecha)) %>%
-    group_by(year, trimestre) %>%
-    summarise(tc_fix = mean(tc_fix), tasa_real = mean(tasa_real), .groups = "drop")
-  # Leer INEGI (Codificación UTF-16LE)
-  print("Leyendo: input/inegi_consumo.csv")
-  lineas_inegi <- read_lines("input/inegi_consumo.csv", locale = locale(encoding = "UTF-16LE"))
-  inicio_inegi <- which(grepl("Periodo", lineas_inegi))[1]
-  df_inegi <- read_csv("input/inegi_consumo.csv", skip = inicio_inegi - 1, 
-                       locale = locale(encoding = "UTF-16LE"), show_col_types = FALSE)
-  colnames(df_inegi)[1:4] <- c("periodo", "c_total", "c_nacional", "c_importado")
-  df_inegi <- df_inegi %>%
-    filter(!is.na(c_total)) %>%
-    mutate(year = as.numeric(substr(periodo, 1, 4)), trimestre = as.numeric(substr(periodo, 6, 7)))
-  # Unión Final
-  df_final <- df_inegi %>%
-    inner_join(banxico, by = c("year", "trimestre")) %>%
-    select(year, trimestre, periodo, c_total, c_nacional, c_importado, tc_fix, tasa_real)
-  if(!dir.exists("output")) dir.create("output")
-  write_csv(df_final, "output/consumo_limpio.csv")
-  print("¡LOGRADO! Archivo 'output/consumo_limpio.csv' generado con éxito.")
-  print(head(df_final))
-})
+
+# Conexión a la base de datos
+db_path <- "output/macroeconomia_consumo.sqlite"
+con <- dbConnect(SQLite(), db_path)
+
+# 1. Cargar y limpiar inegi_consumo
+consumo_raw <- dbReadTable(con, "inegi_consumo")
+
+# Identificar columnas por posición ya que los nombres son muy largos
+# Col 1: Periodo, Col 2: Total, Col 3: Nacional, Col 4: Importado
+consumo <- consumo_raw %>%
+  rename(periodo_raw = 1, total = 2, nacional = 3, importado = 4) %>%
+  mutate(
+    year = as.numeric(substr(periodo_raw, 1, 4)),
+    quarter = as.numeric(substr(periodo_raw, 6, 7)),
+    date = ymd(paste(year, (quarter - 1) * 3 + 1, "01", sep = "-")),
+    across(c(total, nacional, importado), as.numeric)
+  ) %>%
+  filter(!is.na(year), year >= 2000) %>%
+  select(date, year, quarter, total, nacional, importado)
+
+# 2. Cargar y limpiar inflacion (Mensual)
+inflacion_raw <- dbReadTable(con, "inflacion")
+# Omitir las primeras filas de metadatos
+inflacion <- inflacion_raw %>%
+  rename(periodo_raw = 1, indice = 2) %>%
+  mutate(indice = as.numeric(indice)) %>%
+  filter(!is.na(indice)) %>%
+  mutate(
+    date_val = dmy(periodo_raw),
+    year = year(date_val),
+    month = month(date_val),
+    quarter = (month - 1) %/% 3 + 1
+  ) %>%
+  filter(year >= 1999) %>% # Necesitamos 1999 para calcular la inflación de inicios de 2000
+  arrange(date_val) %>%
+  mutate(infl_mensual = (indice / lag(indice) - 1))
+
+# Trimestralizar inflación (promedio del trimestre o fin de trimestre)
+# Usaremos el promedio de la inflación mensual en el trimestre para una tasa trimestral
+inflacion_q <- inflacion %>%
+  group_by(year, quarter) %>%
+  summarise(infl_trimestral = prod(1 + infl_mensual, na.rm = TRUE) - 1, .groups = "drop") %>%
+  mutate(infl_anualizada = (1 + infl_trimestral)^4 - 1)
+
+# 3. Cargar y limpiar tasas_nominal (Cetes 28 días)
+tasas_raw <- dbReadTable(con, "tasas_nominal")
+tasas <- tasas_raw %>%
+  rename(periodo_raw = 1, cetes28 = 2) %>%
+  mutate(cetes28 = as.numeric(cetes28)) %>%
+  filter(!is.na(cetes28)) %>%
+  mutate(
+    date_val = dmy(periodo_raw),
+    year = year(date_val),
+    quarter = quarter(date_val)
+  ) %>%
+  filter(year >= 2000) %>%
+  group_by(year, quarter) %>%
+  summarise(tasa_nominal = mean(cetes28, na.rm = TRUE) / 100, .groups = "drop")
+
+# 4. Cargar y limpiar tc_fix
+tc_raw <- dbReadTable(con, "tc_fix")
+tc <- tc_raw %>%
+  rename(periodo_raw = 1, tc = 2) %>%
+  mutate(tc = as.numeric(tc)) %>%
+  filter(!is.na(tc)) %>%
+  mutate(
+    date_val = dmy(periodo_raw),
+    year = year(date_val),
+    quarter = quarter(date_val)
+  ) %>%
+  filter(year >= 2000) %>%
+  group_by(year, quarter) %>%
+  summarise(tc_fix = mean(tc, na.rm = TRUE), .groups = "drop")
+
+# 5. Unir y calcular Tasa Real
+df_final <- consumo %>%
+  left_join(inflacion_q, by = c("year", "quarter")) %>%
+  left_join(tasas, by = c("year", "quarter")) %>%
+  left_join(tc, by = c("year", "quarter")) %>%
+  mutate(
+    tasa_real = (1 + tasa_nominal) / (1 + infl_anualizada) - 1
+  ) %>%
+  filter(!is.na(total))
+
+# Guardar resultado
+write.csv(df_final, "output/consumo_limpio.csv", row.names = FALSE)
+dbDisconnect(con)
+
+cat("Dataset limpio generado en output/consumo_limpio.csv\n")
+print(head(df_final))

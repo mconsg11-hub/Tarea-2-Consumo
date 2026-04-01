@@ -7,8 +7,7 @@
 - **Flujo de Trabajo:**
 
   1. Gemini genera y guarda el script en el workspace.
-  2. Gemini se detiene y espera a que el usuario proporcione el output de la terminal.
-  3. Gemini analiza los resultados y procede con el siguiente paso del plan, antes de iniciar el siguiente paso, lo avisa y pide permiso
+  2. Gemini ejecuta el script, analiza los resultados y procede con el siguiente paso del plan. Antes de iniciar el siguiente paso, lo avisa y pide permiso.
 - **Resultados:** Se debe mantener un archivo `Resultados.Rmd` que se actualizará de forma incremental con cada hallazgo relevante para la tarea, procura reportar los resultados en forma de tabla o graficas cuando sea el caso y para los porcentajes especificar el calculo para llegar a ellos. En las tablas no hagas versiones resumidas (...) a menos que se te indique.
 - **Idioma:** Todas las respuestas y reportes de Gemini deben ser en **español**.
 - **Herramientas:** Se debe priorizar el uso de R para todos los scripts de análisis y python para procesamiento.

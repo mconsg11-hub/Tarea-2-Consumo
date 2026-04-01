@@ -12,13 +12,10 @@ Este plan detalla los pasos para completar los ejercicios 5, 6 y 7 de la Tarea 2
 
 ### 2. Obtención de Datos (Manual)
 
-* **Paso 1.1:** El usuario descarga de **INEGI (BIE)** el archivo con las series trimestrales (desestacionalizadas, valores absolutos, precios 2018) de: Consumo privado total, Bienes nacionales e Importados. Guardar en `inputs/inegi_consumo.xls`. **[Inciso 5a]**
-* **Paso 1.2:** El usuario descarga de **BANXICO (SIE)** las series `SF43718` (TC FIX) y `SF331451` (Tasa Real) desde el año 2000. Guardar en `inputs/banxico_series.xlsx`. **[Inciso 5b]**
-
-### 3. Procesamiento y Análisis en R
-
-* **Paso 1.3:** Crear el script `05_01_limpieza_consumo.R` para leer los archivos en `inputs/`, alinear trimestres y exportar un dataset limpio a `output/`. **[Incisos 5a, 5b]**
-* **Paso 1.4:** Crear el script `05_02_analisis_ciclico.R` para generar gráficas y calcular la matriz de varianza-covarianza. Los resultados se guardarán en `output/`. **[Incisos 5c, 5d]**
+* **Paso 1.1:** [x] El usuario descargó las series trimestrales de INEGI. Artefacto: `input/inegi_consumo.csv`.
+* **Paso 1.2:** [x] El usuario descargó las series de BANXICO. Artefactos: `input/inflacion.csv`, `input/tasas_nominal.csv`, `input/tc_fix.csv`.
+* **Paso 1.3:** [x] Crear el script `05_01_limpieza_consumo.R` para leer de la DB SQLite y exportar un dataset limpio. Artefactos: `05_01_limpieza_consumo.R`, `output/consumo_limpio.csv`.
+* **Paso 1.4:** [x] Crear el script `05_02_analisis_ciclico.R` para generar gráficas y calcular la matriz de varianza-covarianza. Artefactos: `05_02_analisis_ciclico.R`, `output/grafica_ciclos_consumo.png`, `output/grafica_consumo_vs_tasa.png`, `output/matriz_correlacion.csv`, `output/resumen_estadistico.csv`.
 
 ### 4. Reporte de Resultados
 
