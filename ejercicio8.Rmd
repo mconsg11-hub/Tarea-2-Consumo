@@ -1,0 +1,258 @@
+---
+output: 
+  pdf_document:
+    number_sections: false
+    latex_engine: xelatex
+header-includes:
+  - \usepackage{setspace}
+  - \onehalfspacing
+  - \usepackage{ragged2e}
+  - \AtBeginDocument{\justifying}
+  - \usepackage{graphicx}
+  - \usepackage{caption}
+  - \captionsetup[table]{labelformat=empty}
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+\begin{titlepage}
+\centering
+\vspace*{3cm}
+
+{\Huge\bfseries Ejercicio 8: Valuación de opciones con árbol binomial en dos etapas \par}
+\vspace{2cm}
+
+{\Large \textbf{Autor:} \par}
+{\Large Martha Constanza Grullón Guerrero \par}
+
+\vfill
+\end{titlepage}
+
+Para valuar la opción con el método del árbol binomial en dos etapas, comenzamos por modelar el comportamiento del activo subyacente. Sea $P_0 = 200$ el precio actual del activo y supongamos que en cada periodo su precio puede multiplicarse por un factor de alza $u$ o por un factor de baja $d$, con $u>d$. Además, la tasa de interés libre de riesgo es $r=0.05$, por lo que el factor bruto de interés es
+
+$$
+R = 1+r = 1.05.
+$$
+
+Dado que el número de equipo es $N=5$, el precio de ejercicio de la opción call es
+
+$$
+K = P_0 - 5N = 200 - 5(5) = 175.
+$$
+
+El árbol binomial en dos etapas para el precio del activo queda entonces descrito de la siguiente forma. En el primer periodo, el precio puede pasar de $200$ a
+
+$$
+P_u = 200u
+\qquad \text{o} \qquad
+P_d = 200d.
+$$
+
+En el segundo periodo, partiendo de esos nodos intermedios, los precios terminales del activo son
+
+$$
+P_{uu} = 200u^2, \qquad P_{ud} = 200ud, \qquad P_{dd} = 200d^2.
+$$
+
+Como se trata de un árbol binomial recombinante, se tiene que $P_{ud} = P_{du} = 200ud$.
+
+Primero debe explicarse el precio actual del activo a partir de una probabilidad subjetiva $q$. Esta probabilidad no es una probabilidad objetiva, sino la probabilidad implícita en la valuación del activo. Esta depende de cómo valora el agente los rendimientos en cada estado de la naturaleza. $q$ es la probabilidad subjetiva asociada a que el precio del activo se ajuste al alza, y por lo tanto, $1-q$ es la probabilidad subjetiva de que se ajuste a la baja. El precio actual debe satisfacer la ecuación
+
+$$
+P_0 = \frac{qP_u + (1-q)P_d}{R}.
+$$
+
+Sustituyendo $P_0=200$, $P_u=200u$, $P_d=200d$ y $R=1.05$, obtenemos
+
+$$
+200 = \frac{q(200u) + (1-q)(200d)}{1.05}.
+$$
+
+Multiplicando por $1.05$ y simplificando,
+
+$$
+210 = 200qu + 200d - 200qd,
+$$
+
+$$
+1.05 = qu + d - qd,
+$$
+
+$$
+1.05 = d + q(u-d).
+$$
+
+Por lo tanto, la probabilidad de valuación viene dada por
+
+$$
+q = \frac{1.05 - d}{u - d}.
+$$
+
+En consecuencia,
+
+$$
+1-q = \frac{u - 1.05}{u - d}.
+$$
+
+Una vez obtenida esta probabilidad de valuación, se procede a valuar la opción call. El pago de una opción call al vencimiento es
+
+$$
+C_T = (P_T - K)^+,
+$$
+
+donde $(x)^+ = \max\{x,0\}$. Como en este caso $K=175$, los pagos terminales de la opción en los tres nodos finales del árbol son
+
+$$
+C_{uu} = \max(200u^2 - 175, 0),
+$$
+
+$$
+C_{ud} = \max(200ud - 175, 0),
+$$
+
+$$
+C_{dd} = \max(200d^2 - 175, 0).
+$$
+
+Después, se hace inducción hacia atrás. En el nodo superior del primer periodo, el valor de la opción es el valor descontado del pago esperado bajo la probabilidad de valuación:
+
+$$
+C_u = \frac{qC_{uu} + (1-q)C_{ud}}{1.05}.
+$$
+
+De manera análoga, en el nodo inferior del primer periodo el valor de la opción es
+
+$$
+C_d = \frac{qC_{ud} + (1-q)C_{dd}}{1.05}.
+$$
+
+Finalmente, el valor actual de la opción call se obtiene descontando nuevamente el valor esperado de los nodos intermedios:
+
+$$
+C_0 = \frac{qC_u + (1-q)C_d}{1.05}.
+$$
+
+Sustituyendo $C_u$ y $C_d$, queda completamente determinada la valuación del call en dos etapas. Así, el procedimiento consiste en dos partes: primero, utilizar el árbol del subyacente para encontrar la probabilidad de valuación $q$ que explica el precio actual del activo; y segundo, usar esa misma probabilidad para descontar hacia atrás los pagos contingentes de la opción call. En este ejercicio, con $N=5$, el precio de ejercicio es $K=175$, y el valor del call depende de los factores de movimiento $u$ y $d$ a través de las expresiones anteriores.
+
+A continuación, para obtener valores numéricos, supongamos que los factores de movimiento del precio son
+
+$$
+u = 1.5
+\qquad \text{y} \qquad
+d = 0.5.
+$$
+
+Mantenemos los supuestos anteriores: el precio actual del activo es $P_0=200$, la tasa libre de riesgo es $r=0.05$, de modo que
+
+$$
+R = 1+r = 1.05,
+$$
+
+y, dado que $N=5$, el precio de ejercicio del call es
+
+$$
+K = 200 - 5(5) = 175.
+$$
+
+Sustituyendo $u=1.5$ y $d=0.5$ en la expresión para la probabilidad de valuación, obtenemos
+
+$$
+q = \frac{1.05 - d}{u - d}
+= \frac{1.05 - 0.5}{1.5 - 0.5}
+= \frac{0.55}{1}
+= 0.55.
+$$
+
+Por lo tanto,
+
+$$
+1-q = 0.45.
+$$
+
+El hecho de que la probabilidad de valuación del estado de alza sea $q=0.55$, mayor que la del estado de baja $1-q=0.45$, implica que los pagos asociados al escenario favorable reciben un mayor peso en la valuación actual. En este caso, los retornos que se obtendrían cuando el precio del activo sube son relativamente más valorados hoy que los retornos asociados al escenario de baja.
+
+
+Con estos valores, el árbol del precio del activo queda:
+
+$$
+P_u = 200(1.5) = 300,
+\qquad
+P_d = 200(0.5) = 100.
+$$
+
+En el segundo periodo, los precios terminales son
+
+$$
+P_{uu} = 200(1.5)^2 = 450,
+$$
+
+$$
+P_{ud} = 200(1.5)(0.5) = 150,
+$$
+
+$$
+P_{dd} = 200(0.5)^2 = 50.
+$$
+
+Ahora calculamos los pagos terminales de la opción call. Recordando que el pago al vencimiento es
+
+$$
+C_T = (P_T - K)^+,
+$$
+
+se tiene:
+
+$$
+C_{uu} = \max(450 - 175, 0) = 275,
+$$
+
+$$
+C_{ud} = \max(150 - 175, 0) = 0,
+$$
+
+$$
+C_{dd} = \max(50 - 175, 0) = 0.
+$$
+
+Después, hacemos inducción hacia atrás. En el nodo superior del primer periodo, el valor de la opción es
+
+$$
+C_u = \frac{qC_{uu} + (1-q)C_{ud}}{1.05}
+= \frac{0.55(275) + 0.45(0)}{1.05}.
+$$
+
+Entonces,
+
+$$
+C_u = \frac{151.25}{1.05} \approx 144.05.
+$$
+
+En el nodo inferior del primer periodo, el valor de la opción es
+
+$$
+C_d = \frac{qC_{ud} + (1-q)C_{dd}}{1.05}
+= \frac{0.55(0) + 0.45(0)}{1.05}
+= 0.
+$$
+
+Finalmente, el valor actual del call es
+
+$$
+C_0 = \frac{qC_u + (1-q)C_d}{1.05}
+= \frac{0.55(144.05) + 0.45(0)}{1.05}.
+$$
+
+Por lo tanto,
+
+$$
+C_0 \approx \frac{79.23}{1.05} \approx 75.45.
+$$
+
+En consecuencia, bajo los supuestos $u=1.5$ y $d=0.5$, el valor numérico de la opción call es aproximadamente
+
+$$
+C_0 \approx 75.45.
+$$
+
+Así, el ejercicio muestra que, una vez fijados los factores de subida y bajada del árbol binomial, primero se obtiene la probabilidad de valuación que racionaliza el precio actual del activo y después se usa esa misma probabilidad para descontar hacia atrás los pagos de la opción. En este caso, la opción sólo tiene valor porque existe la posibilidad de que el precio del activo suba lo suficiente como para que convenga ejercerla. En este ejercicio, eso únicamente ocurre en el estado $uu$, donde el precio final del activo alcanza un nivel mayor que el precio de ejercicio. En los demás estados, el precio final resulta demasiado bajo, de modo que no tendría sentido comprar el activo al precio pactado en la opción cuando en el mercado vale menos. Por eso, aunque el call se valúa considerando todos los escenarios del árbol, su precio hoy se explica únicamente por el escenario favorable en que el activo sube dos veces consecutivas.

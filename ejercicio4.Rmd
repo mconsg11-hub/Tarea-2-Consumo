@@ -1,0 +1,780 @@
+---
+output: 
+  pdf_document:
+    number_sections: false
+    latex_engine: xelatex
+header-includes:
+  - \usepackage{setspace}
+  - \onehalfspacing
+  - \usepackage{ragged2e}
+  - \AtBeginDocument{\justifying}
+  - \usepackage{graphicx}
+  - \usepackage{caption}
+  - \captionsetup[table]{labelformat=empty}
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+\begin{titlepage}
+\centering
+\vspace*{3cm}
+
+{\Huge\bfseries Ejercicio 4: Un estudio de los consumos de los hogares en México \par}
+\vspace{2cm}
+
+{\Large \textbf{Autor:} \par}
+{\Large Martha Constanza Grullón Guerrero \par}
+
+\vfill
+\end{titlepage}
+
+## (a) Descripción de los datos
+
+En este ejercicio se utilizan los microdatos de la Encuesta Nacional de Ingresos y Gastos de los Hogares 2016 (ENIGH 2016), elaborada por el INEGI. El objetivo es analizar la relación entre el ingreso y el gasto de los hogares mexicanos, tanto para el total de hogares entrevistados como para submuestras específicas definidas por características del jefe del hogar y por ámbito de residencia. La ENIGH es una fuente estadística fundamental para estudiar la estructura del ingreso, el gasto y las condiciones socioeconómicas de los hogares en México.
+
+Los datos fueron descargados manualmente desde el portal del INEGI en formato de datos abiertos. En particular, para este ejercicio se utilizó únicamente la tabla CONCENTRADOHOGAR, que es la tabla resumen a nivel hogar y contiene variables construidas a partir de las distintas tablas de la base de datos. Esta tabla concentra, para cada hogar, información agregada sobre ingresos, gastos y factores de expansión, lo que la hace especialmente útil para realizar el análisis solicitado sin necesidad de unir múltiples archivos. Además, el descriptor de la encuesta señala que los ingresos y gastos registrados en esta tabla se encuentran expresados de forma trimestral.
+
+El archivo utilizado se encuentra organizado dentro del directorio de trabajo siguiendo la estructura de carpetas provista por INEGI para la ENIGH 2016. De forma general, la ruta del archivo puede representarse como:
+
+conjunto_de_datos_enigh2016_nueva_serie_csv/
+    conjunto_de_datos_concentradohogar_enigh_2016_ns/
+        conjunto_de_datos/
+            conjunto_de_datos_concentradohogar_enigh_2016_ns.csv
+
+En este caso, la base se cargó directamente desde la ruta local de trabajo y se importó a R para su procesamiento.
+
+
+A partir del archivo conjunto_de_datos_concentradohogar_enigh_2016_ns.csv se construyó una base de datos simplificada para el ejercicio. En primer lugar, se seleccionó un subconjunto de variables relevantes para el análisis. Estas variables incluyen los identificadores del hogar y la vivienda (folioviv y foliohog), la ubicación geográfica (ubica_geo), el factor de expansión (factor), el sexo y la edad del jefe del hogar (sexo_jefe y edad_jefe), así como el ingreso corriente y el gasto monetario trimestrales del hogar (ing_cor y gasto_mon).  Esta selección permitió reducir el tamaño de la base y conservar únicamente la información necesaria para responder a los incisos del ejercicio.
+
+Posteriormente, se realizó una limpieza básica de los datos con el fin de facilitar su manipulación y análisis. En particular, se trabajó únicamente con la tabla resumen a nivel hogar, evitando la incorporación de variables o tablas que no eran necesarias para estimar promedios y relaciones entre ingreso y gasto. Asimismo, a partir de las variables originales se construyeron dos variables adicionales útiles para el análisis. La primera fue una variable de entidad, obtenida a partir de los primeros dos dígitos de ubica_geo, lo que permite identificar hogares de la Ciudad de México. La segunda fue una variable de ámbito, construida a partir del tercer dígito de folioviv, siguiendo el criterio establecido en el descriptor de la ENIGH: cuando dicho dígito es igual a 6 se clasifica como rural, y en caso contrario como urbano.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(dplyr)
+library(readr)
+
+concentradohogar <- read_csv(
+  "C:/Users/mcons/OneDrive - El Colegio de México A.C/Documents/MACROII/tarea2/conjunto_de_datos_enigh2016_nueva_serie_csv/conjunto_de_datos_concentradohogar_enigh_2016_ns/conjunto_de_datos/conjunto_de_datos_concentradohogar_enigh_2016_ns.csv"
+)
+
+enigh_base <- concentradohogar %>%
+  select(
+    folioviv,
+    foliohog,
+    ubica_geo,
+    factor,
+    sexo_jefe,
+    edad_jefe,
+    ing_cor,
+    gasto_mon
+  ) %>%
+  mutate(
+    entidad = substr(ubica_geo, 1, 2),
+    ambito = if_else(substr(folioviv, 3, 3) == "6", "rural", "urbano")
+  )
+
+
+```
+## (b) Cálculo del número de hogares y de los promedios de ingreso y gasto
+Se define el número de hogares entrevistados como el total de registros contenidos en la base `concentradohogar`, dado que cada observación corresponde a un hogar. Formalmente, si \(N\) denota el número de hogares en la muestra, entonces:
+
+$$
+N = \sum_{i=1}^{n} 1
+$$
+
+donde cada \(i\) identifica a un hogar entrevistado. Posteriormente, se calcularon el ingreso corriente promedio y el gasto monetario trimestrales promedio de la muestra mediante medias aritméticas simples:
+
+$$
+\bar{Y} = \frac{1}{N}\sum_{i=1}^{N} ing\_cor_i
+$$
+
+$$
+\bar{G} = \frac{1}{N}\sum_{i=1}^{N} gasto\_mon_i
+$$
+
+donde \(ing\_cor_i\) representa el ingreso corriente del hogar \(i\) y \(gasto\_mon_i\) su gasto monetario. Sin embargo, dado que la ENIGH es una encuesta por muestreo, estos promedios simples describen únicamente a los hogares observados en la muestra. Para obtener estimaciones representativas del total de hogares mexicanos, se utilizaron los factores de expansión de la encuesta. Así, el ingreso corriente promedio ponderado y el gasto monetario promedio ponderado trimestrales se calcularon como:
+
+$$
+\bar{Y}_w = \frac{\sum_{i=1}^{N} ing\_cor_i \cdot factor_i}{\sum_{i=1}^{N} factor_i}
+$$
+
+$$
+\bar{G}_w = \frac{\sum_{i=1}^{N} gasto\_mon_i \cdot factor_i}{\sum_{i=1}^{N} factor_i}
+$$
+
+donde \(factor_i\) es el factor de expansión asociado al hogar \(i\). De esta manera, los promedios ponderados corrigen por el diseño muestral de la encuesta y permiten extrapolar los resultados al conjunto de hogares del país.
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
+# Librerías
+library(dplyr)
+library(readr)
+library(knitr)
+library(kableExtra)
+library(ggplot2)
+library(scales)
+
+# Cargar la base
+concentradohogar <- read_csv(
+  "C:/Users/mcons/OneDrive - El Colegio de México A.C/Documents/MACROII/tarea2/conjunto_de_datos_enigh2016_nueva_serie_csv/conjunto_de_datos_concentradohogar_enigh_2016_ns/conjunto_de_datos/conjunto_de_datos_concentradohogar_enigh_2016_ns.csv"
+)
+
+# Seleccionar variables necesarias
+enigh_base <- concentradohogar %>%
+  select(folioviv, foliohog, factor, ing_cor, gasto_mon)
+
+# Cálculos del inciso (b)
+n_hogares <- nrow(enigh_base)
+
+prom_ingreso_muestra <- mean(enigh_base$ing_cor, na.rm = TRUE)
+prom_gasto_muestra   <- mean(enigh_base$gasto_mon, na.rm = TRUE)
+
+prom_ingreso_poblacion <- weighted.mean(enigh_base$ing_cor, w = enigh_base$factor, na.rm = TRUE)
+prom_gasto_poblacion   <- weighted.mean(enigh_base$gasto_mon, w = enigh_base$factor, na.rm = TRUE)
+# Tabla de resultados
+tabla_b <- data.frame(
+  Indicador = c(
+    "Número de hogares entrevistados",
+    "Ingreso corriente promedio de la muestra",
+    "Gasto monetario promedio de la muestra",
+    "Ingreso corriente promedio ponderado",
+    "Gasto monetario promedio ponderado"
+  ),
+  Valor = c(
+    n_hogares,
+    prom_ingreso_muestra,
+    prom_gasto_muestra,
+    prom_ingreso_poblacion,
+    prom_gasto_poblacion
+  )
+)
+
+# Formato para mostrar mejor los números
+tabla_b$Valor <- c(
+  format(tabla_b$Valor[1], big.mark = ",", scientific = FALSE),
+  dollar(as.numeric(tabla_b$Valor[2]), accuracy = 0.01),
+  dollar(as.numeric(tabla_b$Valor[3]), accuracy = 0.01),
+  dollar(as.numeric(tabla_b$Valor[4]), accuracy = 0.01),
+  dollar(as.numeric(tabla_b$Valor[5]), accuracy = 0.01)
+)
+
+# Imprimir tabla formal
+kable(
+  tabla_b,
+  format = "latex",
+  booktabs = TRUE,
+  align = c("l", "c"),
+  caption = "\\centering Número de hogares entrevistados y promedios de ingreso y gasto"
+) |>
+  kable_styling(
+    latex_options = c("HOLD_position", "scale_down"),
+    full_width = FALSE,
+    position = "center",
+    font_size = 10
+  ) |>
+  footnote(
+    general = "Fuente: elaboración propia con base en la ENIGH 2016.",
+    general_title = "",
+    threeparttable = TRUE
+  )
+```
+
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
+
+# Base para el gráfico
+graf_b <- data.frame(
+  Tipo = c("Ingreso", "Gasto", "Ingreso", "Gasto"),
+  Promedio = c(
+    prom_ingreso_muestra,
+    prom_gasto_muestra,
+    prom_ingreso_poblacion,
+    prom_gasto_poblacion
+  ),
+  Grupo = c("Muestra", "Muestra", "Ponderado", "Ponderado")
+)
+
+# Gráfico ilustrativo
+ggplot(graf_b, aes(x = Tipo, y = Promedio, fill = Grupo)) +
+  geom_col(position = "dodge") +
+  scale_y_continuous(labels = label_dollar()) +
+  labs(
+    title = "Promedios de ingreso y gasto de los hogares",
+    subtitle = "Comparación entre promedios muestrales y ponderados",
+    x = "",
+    y = "Pesos trimestrales",
+    fill = "",
+    caption = "Fuente: elaboración propia con base en la ENIGH 2016."
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", color = "dodgerblue4"),
+    plot.subtitle = element_text(hjust = 0.5),
+    axis.title = element_text(face = "bold"),
+    legend.position = "top"
+  )
+```
+La tabla y la gráfica resumen el número de hogares entrevistados en la ENIGH 2016, así como los promedios de ingreso corriente y gasto monetario calculados tanto para la muestra como para el total de hogares mexicanos utilizando factores de expansión. En total, la muestra contiene 70,311 hogares entrevistados, lo que constituye la base empírica sobre la cual se realizan las estimaciones.
+
+En primer lugar, se observa que el ingreso corriente promedio de los hogares en la muestra es de $42,038.25 pesos trimestrales, mientras que el gasto monetario promedio asciende a $25,589.98 pesos trimestrales. Esto indica que, en promedio, los hogares reportan un nivel de ingreso superior a su gasto monetario, lo cual es consistente con el hecho de que no todo el ingreso corriente se destina necesariamente al consumo monetario en el periodo de referencia, pues una parte puede ahorrarse o destinarse a otros componentes no capturados en esta variable de gasto.
+
+Al incorporar los factores de expansión de la ENIGH, los promedios ponderados aumentan ligeramente. En particular, el ingreso corriente promedio ponderado es de $46,764.53 pesos trimestrales y el gasto monetario promedio ponderado es de $28,261.67 pesos trimestrales. Esto sugiere que, una vez que se corrige por el diseño muestral de la encuesta, los hogares representativos del total nacional presentan en promedio niveles algo mayores de ingreso y gasto que los observados directamente en la muestra.
+
+La gráfica permite ver con claridad que, tanto en la muestra como en los valores ponderados, el ingreso promedio es mayor que el gasto promedio. Asimismo, se aprecia que la diferencia entre los resultados simples y los ponderados no es demasiado grande, aunque sí lo suficientemente visible como para justificar el uso del factor de expansión cuando se busca hacer inferencias sobre el total de hogares mexicanos y no únicamente sobre los hogares entrevistados.
+
+En conjunto, los resultados muestran que los hogares mexicanos presentan, en promedio, un ingreso corriente superior a su gasto monetario, y que el ajuste por factores de expansión eleva moderadamente ambos indicadores. 
+
+## (c) Relación entre ingreso y gasto de los hogares entrevistados
+
+Para estimar la relación entre ingreso y gasto de las familias entrevistadas, se utiliza un modelo de regresión lineal simple en el que el gasto monetario del hogar se explica a partir de su ingreso corriente. Formalmente, se estima la siguiente ecuación:
+
+$$
+gasto\_mon_i = \alpha + \beta \, ing\_cor_i + u_i
+$$
+
+donde \(gasto\_mon_i\) representa el gasto monetario trimestral del hogar \(i\), \(ing\_cor_i\) su ingreso corriente, \(\alpha\) es la ordenada al origen, \(\beta\) es el coeficiente que mide la relación promedio entre ingreso y gasto, y \(u_i\) es un término de error que recoge otros factores no observados.
+
+Dado que la ENIGH 2016 es una encuesta con diseño probabilístico, la estimación incorpora los factores de expansión de la encuesta, de manera que los resultados sean representativos del total de hogares. Por tanto, la relación se estima mediante mínimos cuadrados ordinarios ponderados utilizando la muestra de hogares entrevistados en la ENIGH 2016. Esta misma metodología se mantiene en los incisos siguientes, de modo que las regresiones para submuestras específicas también utilizan los factores de expansión.
+```{r modelo_c, include=FALSE}
+library(dplyr)
+library(broom)
+library(knitr)
+library(kableExtra)
+library(ggplot2)
+
+modelo_general <- lm(gasto_mon ~ ing_cor, data = enigh_base, weights = factor)
+
+resumen_modelo_general <- summary(modelo_general)
+tabla_coef_general <- broom::tidy(modelo_general)
+glance_general <- broom::glance(modelo_general)
+
+```
+
+```{r tabla_modelo_c, echo=FALSE, results='asis'}
+tabla_c <- tabla_coef_general %>%
+  mutate(
+    estimate = round(estimate, 4),
+    std.error = round(std.error, 4),
+    statistic = round(statistic, 4),
+    p.value = sprintf("%.3f", p.value)
+  ) %>%
+  rename(
+    Término = term,
+    Coeficiente = estimate,
+    `Error estándar` = std.error,
+    `Estadístico t` = statistic,
+    `Valor p` = p.value
+  )
+
+kable(
+  tabla_c,
+  format = "latex",
+  booktabs = TRUE,
+  align = "c",
+  caption = "\\centering Resultados de la regresión lineal entre ingreso y gasto"
+) |>
+  kableExtra::kable_styling(
+    latex_options = c("HOLD_position", "scale_down"),
+    full_width = FALSE,
+    position = "center",
+    font_size = 10
+  ) |>
+  kableExtra::footnote(
+    general = paste0(
+      "Fuente: elaboración propia con base en la ENIGH 2016. ",
+      "Número de observaciones: ", format(glance_general$nobs, big.mark = ","), 
+      ". R² = ", round(glance_general$r.squared, 4), "."
+    ),
+    general_title = "",
+    threeparttable = TRUE
+  )
+```
+
+```{r grafica_modelo_c_45, echo=FALSE, fig.width=8, fig.height=5}
+x_max <- 100000
+y_max <- 100000
+
+lineas_df <- data.frame(
+  ing_cor = seq(0, x_max, length.out = 200)
+)
+
+lineas_df$gasto_estimado <- predict(
+  modelo_general,
+  newdata = lineas_df
+)
+
+lineas_df$linea_45 <- lineas_df$ing_cor
+
+ggplot(lineas_df, aes(x = ing_cor)) +
+  geom_line(aes(y = gasto_estimado, color = "Recta estimada"), linewidth = 1.1) +
+  geom_line(aes(y = linea_45, color = "Línea de 45 grados"), linewidth = 1.1, linetype = "dashed") +
+  coord_cartesian(xlim = c(0, x_max), ylim = c(0, y_max)) +
+  scale_color_manual(
+    values = c("Recta estimada" = "red", "Línea de 45 grados" = "black")
+  ) +
+  scale_x_continuous(
+    breaks = seq(0, x_max, by = 20000),
+    labels = function(x) format(x, big.mark = ",", scientific = FALSE)
+  ) +
+  scale_y_continuous(
+    breaks = seq(0, y_max, by = 20000),
+    labels = function(x) format(x, big.mark = ",", scientific = FALSE)
+  ) +
+  labs(
+    title = "Relación estimada entre ingreso corriente y gasto monetario",
+    subtitle = "Comparación con la línea de 45 grados",
+    x = "Ingreso corriente trimestral",
+    y = "Gasto monetario trimestral",
+    color = "",
+    caption = "Fuente: elaboración propia con base en la ENIGH 2016."
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", color = "dodgerblue4"),
+    plot.subtitle = element_text(hjust = 0.5),
+    axis.title = element_text(face = "bold"),
+    legend.position = "top",
+    plot.caption = element_text(hjust = 0.5, size = 9)
+  )
+```
+La tabla y la gráfica muestran la relación estimada entre el ingreso corriente y el gasto monetario de los hogares entrevistados en la ENIGH 2016. En general, se observa una relación positiva pero cuantitativamente pequeña, pero esta se aleja considerablemente de una relación uno a uno entre el ingreso y el gasto.
+
+En particular, el coeficiente estimado para el ingreso corriente es de \(0.0371\), lo que indica que, en promedio, un aumento de un peso en el ingreso corriente se asocia con un incremento de aproximadamente \(0.03\) pesos en el gasto monetario. Además, este coeficiente es estadísticamente significativo, ya que su valor \(p\) es cero, lo que sugiere que la relación estimada no se debe al azar. El intercepto estimado es de \(26525.6686\), lo cual implica que, aun cuando el ingreso corriente fuera igual a cero, el modelo predice un nivel significativamente positivo de gasto monetario. Esto puede interpretarse como evidencia de gasto autónomo, es decir, de un componente del gasto que no depende directamente del ingreso corriente observado.
+
+Por otro lado, el valor de \(R^2 = 0.089\) indica que el ingreso corriente explica alrededor del 9% de la variación observada en el gasto monetario entre hogares. Esto sugiere que, aunque el ingreso es un determinante del gasto, existe una parte considerable de la heterogeneidad en el comportamiento de los hogares que responde a otros factores no incluidos en esta regresión, como el acceso al crédito, el ahorro previo, la composición del hogar o características demográficas, o la impaciencia de los hogares. 
+
+La gráfica refuerza esta interpretación. La recta estimada tiene una pendiente muy lejana a la línea de 45 grados y se encuentra por debajo en casi todo el rango considerado, lo que indica que el gasto monetario crece menos que proporcionalmente con el ingreso. Si todos los hogares gastaran exactamente todo lo que ganan y no existiera gasto autónomo, la recta estimada coincidiría con la línea de 45 grados y además pasaría por el origen. Sin embargo, los resultados muestran que esto no ocurre: la pendiente estimada es claramente menor que uno y la ordenada al origen es positiva. Por tanto, los datos no son consistentes con la hipótesis de que todo ingreso corriente se destina al gasto monetario y que no existe gasto autónomo.
+
+En conjunto, estos resultados sugieren que el gasto de los hogares no responde fuertemente al ingreso actual. Esto es consistente con la visión de que los hogares no consumen su ingreso actual completo, si no que toman decisiones que suavizan su consumo a lo largo del tiempo, por lo que la relación entre el ingreso y el gasto es débil. Además, estos resultados se acomodan con la hipótesis de Keynes que predice una relación positiva, pero menor a uno, con un factor de consumo autónomo. Podemos especular que un aumento del ingreso lleva a un aumento considerable del ahorro en lugar del consumo para esta muestra.
+
+## (d) Relación entre ingreso y gasto en hogares con jefa femenina de 20 a 30 años en la Ciudad de México
+
+Para este inciso se estima la misma relación lineal entre ingreso corriente y gasto monetario trimestrales, pero restringiendo la muestra a los hogares cuyo jefe de familia es femenino, tiene entre 20 y 30 años de edad y reside en la Ciudad de México. Formalmente, se estima la siguiente ecuación:
+
+$$
+gasto\_mon_i = \alpha + \beta \, ing\_cor_i + u_i
+$$
+
+donde \(gasto\_mon_i\) representa el gasto monetario del hogar \(i\), \(ing\_cor_i\) su ingreso corriente, \(\alpha\) es la constante, \(\beta\) mide la relación promedio entre ingreso y gasto, y \(u_i\) es un término de error. La estimación se realiza por mínimos cuadrados ordinarios sobre la submuestra seleccionada.
+
+```{r preparacion_d, include=FALSE}
+# Crear variables auxiliares si aún no existen
+enigh_base <- concentradohogar %>%
+  select(
+    folioviv, foliohog, ubica_geo, factor,
+    sexo_jefe, edad_jefe, ing_cor, gasto_mon
+  ) %>%
+  mutate(
+    entidad = substr(ubica_geo, 1, 2)
+  )
+
+# Filtrar hogares con jefa mujer, 20-30 años, CDMX
+base_d <- enigh_base %>%
+  filter(
+    sexo_jefe == 2,
+    edad_jefe >= 20,
+    edad_jefe <= 30,
+    entidad == "09"
+  )
+
+# Estimar modelo
+modelo_d <- lm(gasto_mon ~ ing_cor, data = base_d, weights = factor)
+
+# Guardar resultados
+tabla_coef_d <- broom::tidy(modelo_d)
+glance_d <- broom::glance(modelo_d)
+```
+```{r tabla_modelo_d, echo=FALSE, results='asis'}
+tabla_d <- tabla_coef_d %>%
+  mutate(
+    estimate = round(estimate, 4),
+    std.error = round(std.error, 4),
+    statistic = round(statistic, 4),
+    p.value = sprintf("%.3f", p.value)
+  ) %>%
+  rename(
+    Término = term,
+    Coeficiente = estimate,
+    `Error estándar` = std.error,
+    `Estadístico t` = statistic,
+    `Valor p` = p.value
+  )
+
+kable(
+  tabla_d,
+  format = "latex",
+  booktabs = TRUE,
+  align = "c",
+  caption = "\\centering Resultados de la regresión lineal entre ingreso y gasto: jefa mujer, 20 a 30 años, CDMX"
+) |>
+  kableExtra::kable_styling(
+    latex_options = c("HOLD_position", "scale_down"),
+    full_width = FALSE,
+    position = "center",
+    font_size = 10
+  ) |>
+  kableExtra::footnote(
+    general = paste0(
+      "Fuente: elaboración propia con base en la ENIGH 2016. ",
+      "Número de observaciones: ", format(glance_d$nobs, big.mark = ","), 
+      ". R² = ", round(glance_d$r.squared, 2), "."
+    ),
+    general_title = "",
+    threeparttable = TRUE
+  )
+```
+
+```{r grafica_modelo_d, echo=FALSE, fig.width=8, fig.height=5}
+x_max <- min(110000, quantile(base_d$ing_cor, 0.99, na.rm = TRUE))
+y_max <- min(110000, quantile(base_d$gasto_mon, 0.99, na.rm = TRUE))
+
+lineas_d <- data.frame(
+  ing_cor = seq(0, x_max, length.out = 200)
+)
+
+lineas_d$gasto_estimado <- predict(
+  modelo_d,
+  newdata = lineas_d
+)
+
+lineas_d$linea_45 <- lineas_d$ing_cor
+
+ggplot(lineas_d, aes(x = ing_cor)) +
+  geom_line(aes(y = gasto_estimado, color = "Recta estimada"), linewidth = 1.1) +
+  geom_line(aes(y = linea_45, color = "Línea de 45 grados"), linewidth = 1.1, linetype = "dashed") +
+  coord_cartesian(xlim = c(0, x_max), ylim = c(0, y_max)) +
+  scale_color_manual(
+    values = c("Recta estimada" = "red", "Línea de 45 grados" = "black")
+  ) +
+  scale_x_continuous(
+    breaks = seq(0, ceiling(x_max / 20000) * 20000, by = 20000),
+    labels = function(x) format(x, big.mark = ",", scientific = FALSE)
+  ) +
+  scale_y_continuous(
+    breaks = seq(0, ceiling(y_max / 20000) * 20000, by = 20000),
+    labels = function(x) format(x, big.mark = ",", scientific = FALSE)
+  ) +
+  labs(
+    title = "Relación estimada entre ingreso corriente y gasto monetario",
+    subtitle = "Jefa femenina de 20 a 30 años, Ciudad de México",
+    x = "Ingreso corriente trimestral",
+    y = "Gasto monetario trimestral",
+    color = "",
+    caption = "Fuente: elaboración propia con base en la ENIGH 2016."
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", color = "dodgerblue4"),
+    plot.subtitle = element_text(hjust = 0.5),
+    axis.title = element_text(face = "bold"),
+    legend.position = "top",
+    plot.caption = element_text(hjust = 0.5, size = 9)
+  )
+
+``` 
+La tabla y la gráfica muestran la relación estimada entre el ingreso corriente y el gasto monetario para los hogares de la Ciudad de México con jefa femenina de entre 20 y 30 años. En general, se observa una relación positiva y estadísticamente significativa entre ambas variables.
+
+En particular, el coeficiente estimado para el ingreso corriente es de \(0.8787\), lo que indica que, en promedio, un aumento de un peso en el ingreso corriente se asocia con un incremento de aproximadamente \(0.87\) pesos en el gasto monetario. Además, este coeficiente es estadísticamente significativo. Esto sugiere que, dentro de esta submuestra, el ingreso corriente es un determinante importante del gasto monetario, y notoriamente más importante que para la muestra completa de hogares. Se puede interpretar que los hogares con jefas de familia en este rango de edad que residen en la Ciudad de México tienen menos posibilidades de suavizar su consumo, por lo que su patrón de gastos sigue más cercanamente a su patrón de ingresos.Se observa en la gráfica que la relación lineal estimada tiene una pendiente cercana a la recta de 45 grados. 
+
+Por otro lado, el intercepto estimado es de \(-7373.5496\), pero su valor \(p = 0.264\) indica que no es estadísticamente distinto de cero para ningún nivel de significancia. Por tanto, no existe evidencia suficiente para afirmar que haya un componente autónomo del gasto en esta submuestra. En otras palabras, el resultado es consistente con una relación cuya ordenada al origen podría ser aproximadamente nula.
+
+La gráfica refuerza esta interpretación. El consumo es esencialmente proporcional al ingreso agregado. Sin embargo, es importante notar que la cantidad de observaciones para esta muestra es limitado de 37 hogares, lo que puede limitar la validez de estadística de los resultados, y explicar el intercepto negativo.
+
+## (e) Relación entre ingreso y gasto en hogares del ámbito urbano
+
+Para este inciso se estima la misma relación lineal entre ingreso corriente y gasto monetario, pero restringiendo la muestra a los hogares ubicados en el ámbito urbano. Se estima la misma ecuación que se estimó en los incisos anteriores, pero con una submuestra diferente. 
+
+
+```{r preparacion_e, include=FALSE}
+# Construir variable de ámbito si aún no existe
+enigh_base <- concentradohogar %>%
+  select(
+    folioviv, foliohog, ubica_geo, factor,
+    sexo_jefe, edad_jefe, ing_cor, gasto_mon
+  ) %>%
+  mutate(
+    entidad = substr(ubica_geo, 1, 2),
+    ambito = if_else(substr(folioviv, 3, 3) == "6", "rural", "urbano")
+  )
+
+# Filtrar hogares urbanos
+base_e <- enigh_base %>%
+  filter(ambito == "urbano")
+
+# Estimar modelo ponderado
+modelo_e <- lm(gasto_mon ~ ing_cor, data = base_e, weights = factor)
+
+# Guardar resultados
+tabla_coef_e <- broom::tidy(modelo_e)
+glance_e <- broom::glance(modelo_e)
+
+```
+```{r tabla_modelo_e, echo=FALSE, results='asis'}
+tabla_e <- tabla_coef_e %>%
+  mutate(
+    estimate = round(estimate, 4),
+    std.error = round(std.error, 4),
+    statistic = round(statistic, 4),
+    p.value = sprintf("%.3f", p.value)
+  ) %>%
+  rename(
+    Término = term,
+    Coeficiente = estimate,
+    `Error estándar` = std.error,
+    `Estadístico t` = statistic,
+    `Valor p` = p.value
+  )
+
+kable(
+  tabla_e,
+  format = "latex",
+  booktabs = TRUE,
+  align = "c",
+  caption = "\\centering Resultados de la regresión lineal entre ingreso y gasto: hogares del ámbito urbano"
+) |>
+  kableExtra::kable_styling(
+    latex_options = c("HOLD_position", "scale_down"),
+    full_width = FALSE,
+    position = "center",
+    font_size = 10
+  ) |>
+  kableExtra::footnote(
+    general = paste0(
+      "Fuente: elaboración propia con base en la ENIGH 2016. ",
+      "Número de observaciones: ", format(glance_e$nobs, big.mark = ","), 
+      ". R² = ", round(glance_e$r.squared, 2), "."
+    ),
+    general_title = "",
+    threeparttable = TRUE
+  )
+```
+
+
+```{r grafica_modelo_e, echo=FALSE, fig.width=8, fig.height=5}
+x_max <- 110000
+y_max <- 110000
+
+lineas_e <- data.frame(
+  ing_cor = seq(0, x_max, length.out = 200)
+)
+
+lineas_e$gasto_estimado <- predict(
+  modelo_e,
+  newdata = lineas_e
+)
+
+lineas_e$linea_45 <- lineas_e$ing_cor
+
+ggplot(lineas_e, aes(x = ing_cor)) +
+  geom_line(aes(y = gasto_estimado, color = "Recta estimada"), linewidth = 1.1) +
+  geom_line(aes(y = linea_45, color = "Línea de 45 grados"), linewidth = 1.1, linetype = "dashed") +
+  coord_cartesian(xlim = c(0, x_max), ylim = c(0, y_max)) +
+  scale_color_manual(
+    values = c("Recta estimada" = "red", "Línea de 45 grados" = "black")
+  ) +
+  scale_x_continuous(
+    breaks = seq(0, x_max, by = 20000),
+    labels = function(x) format(x, big.mark = ",", scientific = FALSE)
+  ) +
+  scale_y_continuous(
+    breaks = seq(0, y_max, by = 20000),
+    labels = function(x) format(x, big.mark = ",", scientific = FALSE)
+  ) +
+  labs(
+    title = "Relación estimada entre ingreso corriente y gasto monetario",
+    subtitle = "Hogares del ámbito urbano",
+    x = "Ingreso corriente trimestral",
+    y = "Gasto monetario trimestral",
+    color = "",
+    caption = "Fuente: elaboración propia con base en la ENIGH 2016."
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", color = "dodgerblue4"),
+    plot.subtitle = element_text(hjust = 0.5),
+    axis.title = element_text(face = "bold"),
+    legend.position = "top",
+    plot.caption = element_text(hjust = 0.5, size = 9)
+  )
+```
+Los resultados para los hogares del ámbito urbano muestran una relación positiva, significativa, pero no muy importante entre ingreso corriente y gasto monetario. En particular, el coeficiente estimado para el ingreso es \(0.0351\), lo que implica que, en promedio, un aumento de un peso en el ingreso corriente se asocia con un incremento de aproximadamente \(0.03\) pesos en el gasto monetario. Además, el intercepto estimado es positivo y estadísticamente distinto de cero \((29519.4065)\), lo que sugiere la existencia de un componente de gasto que no depende linealmente del ingreso corriente observado. En línea con los resultados para la muestra completa, esta estimación refleja el comportamiento del consumo propuesto por Keynes.
+
+En comparación con la muestra completa, la submuestra urbana presenta un intercepto mayor, pero una pendiente menos inclinada, lo que indica que el ingreso corriente explica una fracción menos importante de la variación del gasto entre hogares urbanos. 
+
+Una posible interpretación económica es que en las zonas urbanas los hogares enfrentan un nivel más alto de gasto básico o comprometido, asociado, por ejemplo, a vivienda, transporte, servicios y otros costos de vida más elevados. Esto ayudaría a explicar el intercepto relativamente alto. Sin embargo, también suele observarse mayor ingreso en este ámbito, por lo que se esperaría que el patrón de consumo, gasto y ahorro se mantenga cercano al observado para toda la muestra.
+
+## (f) Interpretación de los resultados a la luz de la HIP y comparación con los resultados agregados
+
+En conjunto, los resultados obtenidos son más consistentes con la hipótesis keynesiana que con la versión más estricta de la hipótesis del ingreso permanente. La visión keynesiana plantea que el consumo depende principalmente del ingreso corriente y que, por tanto, la pendiente de una regresión de gasto sobre ingreso debe ser positiva y menor que uno, mientras que el intercepto puede ser positivo. Por su parte, la hipótesis del ingreso permanente sostiene que el consumo responde sobre todo al ingreso permanente y no al componente transitoria del ingreso; por ello, en una regresión de corte transversal entre gasto e ingreso corriente, la pendiente estimada depende de qué tanto de la variación observada en el ingreso corresponde a diferencias en ingreso permanente y qué tanto corresponde a variaciones transitorias. Cuando la varianza del ingreso permanente es grande en relación con la del ingreso transitorio, la pendiente estimada tiende a ser más alta; cuando ocurre lo contrario, la pendiente es menor, pues una mayor fracción de las diferencias en ingreso corriente no se traduce en diferencias equivalentes en consumo. 
+
+Bajo esta lógica, el hecho de que en todas las regresiones la pendiente estimada sea positiva pero menor que uno puede interpretarse como evidencia de que el gasto sí responde al ingreso corriente, pero menos que proporcionalmente. Esto es compatible con la hipótesis keynesiana en su forma empírica usual, pero también puede reconciliarse parcialmente con la hipótesis del ingreso permanente si se reconoce que el ingreso corriente observado en la ENIGH mezcla componentes permanentes y transitorios. En particular, dado que se está haciendo un análisis de corte transversal y se están comparando ingreso y consumos entre individuos en un punto en el tiempo, se espera que la variación entre los ingresos esté más relacionada a choques transitorios en el ingreso que a variaciones en el ingreso permanente. Se puede especular que en efecto hay una variación importante entre los ingresos permanentes de los hogares entrevistados, sin embargo, la variación transitorio es más relevante este tipo de datos. Esto se observa también en la submuestra urbana, donde los resultados son muy similares. Se puede esperar que el nivel de ingresos permanentes sea más homogéneo en esta submuesta, por lo que la variación proviene más de cambios transitorios
+ En la submuestra de hogares con jefa femenina joven en la Ciudad de México, la pendiente estimada fue considerablemente mayor, mientras que el intercepto no fue estadísticamente distinto de cero. Esto sugiere que, en ese grupo, una mayor parte de la variación observada en el ingreso corriente podría estar asociada a diferencias más persistentes en recursos disponibles. Dado que es una submuestar con muy pocas observaciones, es menos probable que todas hayan obtenido ingresos transitorios en el mismo periodo que expliquen la variación entre sus hogares. Se puede especular que las diferencias en los ingresos se deben a niveles económicos persistentemente diferentes a lo largo de la vida entre estos hogares. 
+
+
+En síntesis, la evidencia empírica de este ejercicio sugiere que, en general, el gasto monetario está positivamente relacionado con el ingreso corriente, pero es una proporción considerablemente menor a uno. Esto encaja bien con la Hipótesis del Ingreso Permanente que predice una relación débil entre el ingreso actual y consumos, ya que los hogares planean su gasto con respecto a la información que tienen sobre el ingreso permanente y los recursos que esperan tener a lo largo de sus vidas. Por este motivo, el patrón del consumo es muy estable y se distancia considerablemente del patrón del ingreso. Esto es lo que se observa en la estimación de la relación lineal entre ambas variables para la muestra completa ponderada y la submuesta urbana, donde la recta de gasto observada tiene poca pendiente y crece muy lentamente con el ingreso.
+
+## Regresión complementaria con interacciones
+
+Como ejercicio complementario, se estima una regresión lineal del gasto monetario del hogar sobre el ingreso corriente incorporando además características demográficas y de localización. El objetivo de este análisis es integrar en una sola especificación parte de la información explorada en los incisos anteriores y evaluar si la relación entre ingreso y gasto cambia según el sexo de la jefatura del hogar y el ámbito de residencia.
+
+En particular, se incluyen una dummy para jefatura femenina, la edad del jefe o jefa del hogar, una dummy para ámbito urbano y dos términos de interacción entre el ingreso corriente y las variables indicadoras de jefatura femenina y ámbito urbano. La categoría base es la de hogares con jefatura masculina y residencia rural.
+
+La regresión se estima utilizando los factores de expansión de la ENIGH, de manera que los resultados sean representativos del total de hogares. Además, se emplean errores estándar robustos a heterocedasticidad. La especificación es la siguiente:
+
+$$
+\begin{aligned}
+gasto\_mon_i =\;& \alpha + \beta_1 ing\_cor_i + \beta_2 mujer\_jefa_i + \beta_3 edad\_jefe_i + \beta_4 urbano_i \\
+&+ \beta_5 (ing\_cor_i \times mujer\_jefa_i) + \beta_6 (ing\_cor_i \times urbano_i) + u_i
+\end{aligned}
+$$
+
+donde \(mujer\_jefa_i\) es una variable indicadora que toma el valor de 1 si el hogar tiene jefatura femenina y 0 si tiene jefatura masculina, mientras que \(urbano_i\) toma el valor de 1 para hogares urbanos y 0 para hogares rurales. Así, \(\beta_1\) representa la pendiente ingreso-gasto para la categoría base, es decir, hogares rurales con jefatura masculina. El coeficiente \(\beta_2\) mide la diferencia en el intercepto entre hogares con jefatura femenina y masculina, manteniendo constantes las demás variables, y \(\beta_4\) mide la diferencia en el intercepto entre hogares urbanos y rurales.
+
+Por su parte, los coeficientes de interacción permiten evaluar si la propensión marginal a gastar a partir del ingreso corriente difiere entre grupos. En particular, \(\beta_5\) indica cuánto cambia la pendiente ingreso-gasto cuando la jefatura es femenina en lugar de masculina, y \(\beta_6\) cuánto cambia dicha pendiente cuando el hogar es urbano en lugar de rural. De esta forma, la regresión permite distinguir entre diferencias en niveles promedio de gasto y diferencias en la sensibilidad del gasto ante cambios en el ingreso.
+
+```{r regresion_interacciones, include=FALSE}
+library(dplyr)
+library(fixest)
+library(broom)
+library(knitr)
+library(kableExtra)
+
+base_inter <- concentradohogar %>%
+  select(
+    folioviv, foliohog, ubica_geo, factor,
+    sexo_jefe, edad_jefe, ing_cor, gasto_mon
+  ) %>%
+  mutate(
+    urbano = if_else(substr(folioviv, 3, 3) == "6", 0, 1),
+    mujer_jefa = if_else(sexo_jefe == 2, 1, 0)
+  )
+
+modelo_inter <- feols(
+  gasto_mon ~ ing_cor + mujer_jefa + edad_jefe + urbano +
+    ing_cor:mujer_jefa + ing_cor:urbano,
+  data = base_inter,
+  weights = ~factor,
+  vcov = "hetero"
+)
+
+tabla_inter <- broom::tidy(modelo_inter)
+glance_inter <- broom::glance(modelo_inter)
+
+```
+
+```{r tabla_regresion_interacciones, echo=FALSE, results='asis'}
+tabla_inter_fmt <- tabla_inter %>%
+  mutate(
+    estimate = round(estimate, 4),
+    std.error = round(std.error, 4),
+    statistic = round(statistic, 4),
+    p.value = sprintf("%.3f", p.value)
+  ) %>%
+  mutate(
+    term = recode(
+      term,
+      "(Intercept)" = "Constante",
+      "ing_cor" = "Ingreso corriente",
+      "mujer_jefa" = "Jefatura femenina",
+      "edad_jefe" = "Edad del jefe/a",
+      "urbano" = "Hogar urbano",
+      "ing_cor:mujer_jefa" = "Ingreso × jefatura femenina",
+      "ing_cor:urbano" = "Ingreso × hogar urbano"
+    )
+  ) %>%
+  rename(
+    Término = term,
+    Coeficiente = estimate,
+    `Error estándar` = std.error,
+    `Estadístico t` = statistic,
+    `Valor p` = p.value
+  )
+
+kable(
+  tabla_inter_fmt,
+  format = "latex",
+  booktabs = TRUE,
+  align = "c",
+  caption = "\\centering Regresión complementaria del gasto monetario con interacciones"
+) |>
+  kableExtra::kable_styling(
+    latex_options = c("HOLD_position", "scale_down"),
+    full_width = FALSE,
+    position = "center",
+    font_size = 10
+  ) |>
+  kableExtra::footnote(
+    general = paste0(
+      "Fuente: elaboración propia con base en la ENIGH 2016. ",
+      "La categoría base es jefatura masculina y ámbito rural. ",
+      "Se utilizan factores de expansión y errores estándar robustos a heterocedasticidad. ",
+      "Número de observaciones: ", format(glance_inter$nobs, big.mark = ","), 
+      ". R² = ", round(glance_inter$r.squared, 3), "."
+    ),
+    general_title = "",
+    threeparttable = TRUE
+  )
+
+```
+
+```{r grafica_interacciones, echo=FALSE, fig.width=8, fig.height=5}
+library(dplyr)
+library(ggplot2)
+
+# Secuencia de ingresos para graficar
+grid_pred <- expand.grid(
+  ing_cor = seq(0, 110000, by = 1000),
+  mujer_jefa = c(0, 1),
+  urbano = c(0, 1),
+  edad_jefe = mean(base_inter$edad_jefe, na.rm = TRUE)
+)
+
+# Predicciones del modelo
+grid_pred$gasto_predicho <- predict(modelo_inter, newdata = grid_pred)
+
+# Etiquetas de grupo
+grid_pred <- grid_pred %>%
+  mutate(
+    grupo = case_when(
+      mujer_jefa == 0 & urbano == 0 ~ "Masculina - Rural",
+      mujer_jefa == 1 & urbano == 0 ~ "Femenina - Rural",
+      mujer_jefa == 0 & urbano == 1 ~ "Masculina - Urbano",
+      mujer_jefa == 1 & urbano == 1 ~ "Femenina - Urbano"
+    )
+  )
+
+ggplot(grid_pred, aes(x = ing_cor, y = gasto_predicho, color = grupo, linetype = grupo)) +
+  geom_line(linewidth = 1.1) +
+  scale_x_continuous(
+    breaks = seq(0, 110000, by = 20000),
+    labels = function(x) format(x, big.mark = ",", scientific = FALSE)
+  ) +
+  scale_y_continuous(
+    labels = function(x) format(x, big.mark = ",", scientific = FALSE)
+  ) +
+  labs(
+    title = "Relación predicha entre ingreso y gasto por tipo de hogar",
+    subtitle = "Predicciones del modelo con interacciones",
+    x = "Ingreso corriente trimestral",
+    y = "Gasto monetario predicho",
+    color = "",
+    linetype = "",
+    caption = "Fuente: elaboración propia con base en la ENIGH 2016."
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", color = "dodgerblue4"),
+    plot.subtitle = element_text(hjust = 0.5),
+    axis.title = element_text(face = "bold"),
+    legend.position = "bottom",
+    plot.caption = element_text(hjust = 0.5, size = 9)
+  )
+
+```
+
+Los resultados de la regresión complementaria muestran que la relación entre ingreso corriente y gasto monetario difiere según el tipo de hogar, tanto en el nivel de gasto como en la sensibilidad del gasto ante cambios en el ingreso. Dado que la categoría base es la de hogares rurales con jefatura masculina, el coeficiente de \(0.1661\) asociado al ingreso corriente indica que, para este grupo, un peso adicional de ingreso se asocia con un aumento promedio de aproximadamente \(0.16\) pesos en el gasto monetario. Además, este efecto es estadísticamente significativo.
+
+Las interacciones muestran que esta pendiente cambia de manera importante según el sexo de la jefatura y el ámbito de residencia. En particular, el coeficiente de la interacción entre ingreso y jefatura femenina es \(0.2587\), lo que implica que la pendiente para hogares rurales con jefatura femenina es \(0.1667 + 0.2587 = 0.4248\). De forma similar, el coeficiente de la interacción entre ingreso y hogar urbano es \(-0.1343,\), por lo que la pendiente para hogares urbanos con jefatura masculina es menor que la de los hogares rurales con jefaturas masculinas. Esto puede indicar que el gasto de los hogares urbanos responde con menos sensibilidad al ingreso corriente en hogares urbanos y más en hogares con jefatura femenina.
+
+En términos de niveles, la constante estimada para la categoría base es positiva \((19229.60)\), mientras que el coeficiente de jefatura femenina es negativo \((-14341.49)\) y estadísticamente significativo. Esto sugiere que, manteniendo fijo el ingreso y las demás variables, los hogares con jefatura femenina parten de un nivel predicho de gasto menor que los hogares con jefatura masculina dentro de la categoría base. El coeficiente de hogar urbano tamboén es positivo y estadísticamente distinto de cero, por lo que hay evidencia clara de una diferencia autónoma de gasto entre hogares urbanos y rurales una vez que se controla por ingreso, edad e interacciones.
+
+La gráfica ayuda a visualizar estos resultados. La recta correspondiente a hogares rurales con jefatura femenina es la más inclinada, seguida por la de hogares urbanos con jefatura femenina. En contraste, la recta de hogares urbanos con jefatura masculina es la menos inclinada. Esto confirma que la propensión marginal a gastar a partir del ingreso corriente no es homogénea entre grupos. Al mismo tiempo, todas las pendientes permanecen por debajo de uno, de modo que en ningún caso se observa un patrón consistente con la hipótesis extrema de que todo el ingreso adicional se destina al gasto monetario.
+
+En conjunto, esta regresión complementaria sugiere que parte de la heterogeneidad observada en los incisos anteriores no sólo refleja diferencias en el nivel promedio del gasto, sino también diferencias en la forma en que distintos tipos de hogares traducen el ingreso corriente en gasto monetario. En particular, los hogares con jefatura femenina muestran una mayor sensibilidad del gasto al ingreso.

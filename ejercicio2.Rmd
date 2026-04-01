@@ -1,0 +1,607 @@
+---
+output: 
+  pdf_document:
+    number_sections: false
+    latex_engine: xelatex
+header-includes:
+  - \usepackage{setspace}
+  - \onehalfspacing
+  - \usepackage{ragged2e}
+  - \AtBeginDocument{\justifying}
+  - \usepackage{graphicx}
+  - \usepackage{caption}
+  - \captionsetup[table]{labelformat=empty}
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+\begin{titlepage}
+\centering
+\vspace*{3cm}
+
+{\Huge\bfseries Ejercicio 2: Simulación de Ingresos y Consumos \par}
+\vspace{2cm}
+
+{\Large \textbf{Autor:} \par}
+{\Large Martha Constanza Grullón Guerrero \par}
+
+\vfill
+\end{titlepage}
+
+## (a) Matriz de ingresos permanentes por persona en cada periodo
+
+Se simuló una muestra de 20 agentes, cada uno con un ingreso permanente individual generado aleatoriamente a partir de una distribución normal con media 10 y varianza (\sigma_P = 3). Esto implica que, aunque todos los agentes se concentran alrededor de un mismo nivel promedio de ingreso permanente, existe heterogeneidad entre ellos, de modo que algunos presentan valores por encima de 10 y otros por debajo. La dispersión observada en la gráfica refleja precisamente esa diferencia entre individuos, que en este ejercicio representa la variación del componente permanente del ingreso en la población.
+
+Una vez generado el ingreso permanente de cada agente, se construyó para cada uno un vector de 30 observaciones idénticas. Esto significa que, a lo largo de los 30 periodos, el ingreso permanente de cada persona permanece constante, por lo que la variación en esta parte del ejercicio ocurre únicamente entre personas y no dentro de cada una a través del tiempo. En la gráfica de barras se observa entonces el nivel de ingreso permanente constante asignado a cada agente, lo que permite visualizar de forma clara la distribución de este componente en la muestra simulada.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+set.seed(456)
+
+n_personas <- 20
+n_periodos <- 30
+sigma_P <- 3
+
+YP <- rnorm(n_personas, mean = 10, sd = sqrt(sigma_P))
+
+YP_mat <- matrix(
+  rep(YP, each = n_periodos),
+  nrow = n_personas,
+  ncol = n_periodos,
+  byrow = TRUE
+)
+
+library(ggplot2)
+
+graf_a <- data.frame(
+  Persona = factor(1:n_personas),
+  Ingreso_permanente = YP
+)
+
+ggplot(graf_a, aes(x = Persona, y = Ingreso_permanente)) +
+  geom_col(fill = "red") +
+  labs(
+    title = "Ingreso permanente por persona",
+    subtitle = "Simulación de 20 agentes con ingreso permanente constante en 30 periodos",
+    x = "Persona",
+    y = "Ingreso permanente",
+    fill = "",
+    caption = "Fuente: elaboración propia."
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", color = "dodgerblue4"),
+    plot.subtitle = element_text(hjust = 0.5),
+    axis.title = element_text(face = "bold"),
+    legend.position = "top"
+  )
+```
+
+
+## (b) Matriz de ingresos transitorios para cada persona en cada periodo
+
+A continuación, se generan aleatoriamente los ingresos transitorios de cada persona a lo largo de 30 periodos. Este componente del ingreso se distribuye normalmente con media cero y se asume una varianza de 9. De este modo, los ingresos transitorios capturan fluctuaciones temporales alrededor del ingreso permanente, por lo que pueden tomar valores positivos o negativos en cada periodo.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+set.seed(456)
+
+n_personas <- 20
+n_periodos <- 30
+sigma_T <- 9
+
+YT_mat <- matrix(
+  rnorm(n_personas * n_periodos, mean = 0, sd = sqrt(sigma_T)),
+  nrow = n_personas,
+  ncol = n_periodos,
+  byrow = TRUE
+)
+
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+
+graf_b <- as.data.frame(YT_mat)
+colnames(graf_b) <- 1:n_periodos
+graf_b$Persona <- factor(1:n_personas)
+
+graf_b_larga <- graf_b |>
+  pivot_longer(
+    cols = -Persona,
+    names_to = "Periodo",
+    values_to = "Ingreso_transitorio"
+  )
+
+ggplot(graf_b_larga, aes(x = as.numeric(Periodo), y = Ingreso_transitorio, group = Persona, color = Persona)) +
+  geom_line(linewidth = 0.7, show.legend = FALSE) +
+  scale_x_continuous(breaks = 1:30) +
+  scale_color_brewer(palette = "Set3") +
+  labs(
+    title = "Ingreso transitorio por persona y periodo",
+    subtitle = "Simulación de 20 agentes con ingresos transitorios aleatorios",
+    x = "Periodo",
+    y = "Ingreso transitorio",
+    caption = "Fuente: elaboración propia."
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", color = "dodgerblue4"),
+    plot.subtitle = element_text(hjust = 0.5),
+    axis.title = element_text(face = "bold")
+  )
+
+```
+
+## (c) Matriz de ingresos totales 
+
+De acuerdo con el desarrollo de la hipótesis del ingreso permanente de Friedman (1957), se puede expresar el ingreso actual del individuo i en el período t como la suma de su ingreso permanente y transitorio:
+
+$$ Y_{it} = Y_{it}^T + Y_{it}^P $$
+El supuesto de media cero del ingreso transitorio es importante, así cómo notar que ambas simulaciones se realizaron independientemente, por lo que la correlación ente el ingreso permanente y el ingreso transitorio es nula.
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+Y_mat <- YP_mat + YT_mat
+
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+
+graf_c <- as.data.frame(Y_mat)
+colnames(graf_c) <- 1:n_periodos
+graf_c$Persona <- factor(1:n_personas)
+
+graf_c_larga <- graf_c |>
+  pivot_longer(
+    cols = -Persona,
+    names_to = "Periodo",
+    values_to = "Ingreso_total"
+  )
+
+ggplot(graf_c_larga, aes(x = as.numeric(Periodo), y = Ingreso_total, group = Persona, color = Persona)) +
+  geom_line(linewidth = 0.7, show.legend = FALSE) +
+  scale_x_continuous(breaks = 1:30) +
+  scale_color_brewer(palette = "Dark2") +
+  labs(
+    title = "Ingreso total por persona y periodo",
+    subtitle = "Simulación de 20 agentes con ingreso permanente y transitorio",
+    x = "Periodo",
+    y = "Ingreso total",
+    caption = "Fuente: elaboración propia."
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", color = "dodgerblue4"),
+    plot.subtitle = element_text(hjust = 0.5),
+    axis.title = element_text(face = "bold")
+  )
+
+```
+En la gráfica se logra apreciar que los patrones de ingresos de los individuos son altamente heterogéneos y no muestras tendencias a lo largo de los periodos claras. 
+Al comparar la gráfica de ingreso transitorio con la de ingresos totales, se observa que el ingreso total conserva el mismo patrón de fluctuación que el ingreso transitorio, aunque en un nivel más alto. Esto se debe a que el ingreso permanente es constante para cada individuo, por lo que al sumarlo al componente transitorio únicamente desplaza verticalmente la trayectoria del ingreso total, sin alterar su comportamiento temporal.
+
+## (d) Matriz de error de medición
+
+Se incorpora un error de medición (\epsilon_{i,t}), distribuido normalmente con media cero y varianza positiva, con el fin de representar perturbaciones aleatorias en la observación de las variables. Este término recoge la idea de que, en la práctica, los datos no se observan de manera perfecta, sino que pueden contener pequeñas discrepancias derivadas de errores de registro, reporte o medición.
+
+Además, este componente también puede interpretarse como una fuente de variación no observada en las decisiones de consumo de cada periodo, asociada a cambios transitorios en las preferencias o a gastos imprevistos, como emergencias, compras extraordinarias o eventos inesperados. En la simulación se asume una varianza igual a 1, por lo que el error de medición introduce variación adicional, pero de magnitud menor que la del ingreso transitorio. Esto permite que el modelo sea más realista sin modificar de manera importante la dinámica principal del ejercicio.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+sigma_e <- 1
+
+eps_mat <- matrix(
+  rnorm(n_personas * n_periodos, mean = 0, sd = sqrt(sigma_e)),
+  nrow = n_personas,
+  ncol = n_periodos,
+  byrow = TRUE
+)
+
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+
+graf_d <- as.data.frame(eps_mat)
+colnames(graf_d) <- 1:n_periodos
+graf_d$Persona <- factor(1:n_personas)
+
+graf_d_larga <- graf_d |>
+  pivot_longer(
+    cols = -Persona,
+    names_to = "Periodo",
+    values_to = "Error_medicion"
+  )
+
+ggplot(graf_d_larga, aes(x = as.numeric(Periodo), y = Error_medicion, group = Persona, color = Persona)) +
+  geom_line(linewidth = 0.7, show.legend = FALSE) +
+  scale_x_continuous(breaks = 1:30) +
+  scale_color_brewer(palette = "Dark2") +
+  labs(
+    title = "Errores de medición por persona y periodo",
+    subtitle = "Simulación de 20 agentes con errores de medición aleatorios",
+    x = "Periodo",
+    y = "Error de medición",
+    caption = "Fuente: elaboración propia."
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", color = "dodgerblue4"),
+    plot.subtitle = element_text(hjust = 0.5),
+    axis.title = element_text(face = "bold")
+  )
+```
+
+
+##(e) Matriz de consumos
+
+El consumo de los individuos se simula bajo el supuesto de que depende del ingreso permanente, de una fracción reducida del ingreso transitorio y de un error de medición. En particular, la regla (C_{i,t} = Y_i^P + 0.1Y_{i,t}^T + \epsilon_{i,t}) implica que el consumo está determinado principalmente por el componente permanente del ingreso, mientras que solo una pequeña parte del componente transitorio se incorpora al consumo corriente.
+
+Este supuesto no corresponde exactamente a una caminata aleatoria del consumo, pero sí es consistente con la idea de suavización intertemporal. Como únicamente el 10% del ingreso transitorio afecta el consumo del periodo, los individuos no ajustan completamente su gasto ante variaciones temporales del ingreso. En ese sentido, el consumo resulta menos volátil que el ingreso total y refleja que los choques transitorios tienen un efecto limitado sobre el gasto corriente.
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+C_mat <- YP_mat + 0.1 * YT_mat + eps_mat
+
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+
+graf_e <- as.data.frame(C_mat)
+colnames(graf_e) <- 1:n_periodos
+graf_e$Persona <- factor(1:n_personas)
+
+graf_e_larga <- graf_e |>
+  pivot_longer(
+    cols = -Persona,
+    names_to = "Periodo",
+    values_to = "Consumo"
+  )
+
+ggplot(graf_e_larga, aes(x = as.numeric(Periodo), y = Consumo, group = Persona, color = Persona)) +
+  geom_line(linewidth = 0.7, show.legend = FALSE) +
+  scale_x_continuous(breaks = 1:30) +
+  scale_color_brewer(palette = "Dark2") +
+  labs(
+    title = "Consumo por persona y periodo",
+    subtitle = "Simulación de 20 agentes con consumo determinado por ingreso permanente, transitorio y error de medición",
+    x = "Periodo",
+    y = "Consumo",
+    caption = "Fuente: elaboración propia."
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", color = "dodgerblue4"),
+    plot.subtitle = element_text(hjust = 0.5),
+    axis.title = element_text(face = "bold")
+  )
+```
+
+La gráfica de consumo muestra que, aunque cada individuo presenta fluctuaciones a lo largo del tiempo, estas son relativamente moderadas en comparación con las observadas en el ingreso transitorio y en el ingreso total. Esto se debe a que el consumo está determinado principalmente por el ingreso permanente, que permanece constante para cada persona, mientras que el ingreso transitorio solo afecta en una proporción reducida, igual a 0.1. Por ello, las trayectorias de consumo se mantienen relativamente estables y oscilan alrededor de un nivel propio para cada individuo.
+
+Asimismo, la separación entre las distintas líneas refleja la heterogeneidad en los ingresos permanentes de los agentes. Los movimientos de corto plazo alrededor de esos niveles responden al efecto parcial del ingreso transitorio y al error de medición. En conjunto, la gráfica es consistente con la idea de suavización del consumo, ya que los individuos no ajustan plenamente su gasto ante variaciones temporales del ingreso, sino que mantienen un patrón de consumo mucho más estable a lo largo del tiempo.
+
+## (f) Relación lineal entre ingreso total y consumo
+
+Se puede utilizar una regresión lineal univariada del consumo sobre el ingreso total de cada periodo para estimar qué tan estrecha es la relación entre ambas variables y cómo se asocian sus patrones de comportamiento. Dado que el consumo fue construido como $C_{i,t} = Y_i^P + 0.1Y_{i,t}^T + \epsilon_{i,t}$, mientras que el ingreso total se definió como $Y_{i,t} = Y_i^P + Y_{i,t}^T$, se espera una relación positiva entre ambas variables, aunque menor que proporcional. En particular, el consumo depende principalmente del ingreso permanente y solo incorpora una fracción reducida del ingreso transitorio, por lo que se anticipa que la pendiente estimada sea positiva, pero generalmente menor que uno.
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='asis'}
+library(broom)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+
+base_f <- data.frame(
+  Ingreso_total = as.vector(Y_mat),
+  Consumo = as.vector(C_mat)
+)
+
+modelo_f <- lm(Consumo ~ Ingreso_total, data = base_f)
+
+resumen <- tidy(modelo_f) |>
+  select(term, estimate, std.error, statistic, p.value) |>
+  mutate(
+    term = c("(Intercept)", "Ingreso total")
+  )
+
+r2 <- summary(modelo_f)$r.squared
+n <- nobs(modelo_f)
+
+kable(
+  resumen,
+  col.names = c("Término", "Coeficiente", "Error estándar", "Estadístico t", "Valor p"),
+  digits = 4,
+  caption = "\\centering Resultados de la regresión lineal entre consumo e ingreso total",
+  align = "c",
+  booktabs = TRUE,
+  format = "latex",
+  table.envir = "table"
+) |>
+  kable_styling(
+    full_width = FALSE,
+    position = "center",
+    latex_options = c("hold_position", "scale_down"),
+    font_size = 10
+  ) |>
+  footnote(
+    general = paste0(
+      "Fuente: elaboración propia. Número de observaciones: ", n,
+      ". R² = ", round(r2, 4), "."
+    ),
+    general_title = "",
+    threeparttable = TRUE
+  )
+ggplot(base_f, aes(x = Ingreso_total, y = Consumo)) +
+  geom_point(alpha = 0.7) +
+  geom_smooth(method = "lm", se = FALSE, color = "red", linewidth = 1) +
+  labs(
+    title = "Relación entre ingreso total y consumo",
+    subtitle = "Dispersión de las observaciones simuladas y recta de regresión estimada",
+    x = "Ingreso total",
+    y = "Consumo",
+    caption = "Fuente: elaboración propia."
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", color = "dodgerblue4"),
+    plot.subtitle = element_text(hjust = 0.5),
+    axis.title = element_text(face = "bold")
+  )
+```
+
+La estimación muestra una relación positiva entre el ingreso total y el consumo. El coeficiente asociado al ingreso total es $0.3915$, lo que indica que, en promedio, un aumento de una unidad en el ingreso total se asocia con un incremento de aproximadamente $0.39$ unidades en el consumo. Este resultado es consistente con la forma en que se construyó la simulación, ya que el consumo depende positivamente del ingreso, pero menos que proporcionalmente.
+
+Además, la pendiente estimada es claramente menor que uno, lo cual refleja que el consumo responde de manera más moderada que el ingreso total. Esto es coherente con la idea de suavización del consumo: aunque el ingreso total incorpora por completo el componente transitorio, el consumo solo recoge una fracción reducida de este, además de depender del ingreso permanente. Por ello, los choques transitorios en el ingreso no se traducen en cambios de la misma magnitud en el consumo.
+
+El intercepto estimado, igual a $6.5544$, indica que incluso cuando el ingreso total toma un valor cercano a cero, el consumo esperado no desaparece. En este contexto, esto puede interpretarse como el efecto del componente permanente promedio y del diseño mismo de la simulación, donde el consumo no depende exclusivamente del ingreso transitorio observado en cada periodo.
+
+Por su parte, el $R^2 = 0.3704$ muestra que alrededor de $37%$ de la variación del consumo es explicada por el ingreso total. Es decir, existe una asociación positiva y estadísticamente clara, pero no perfecta. Esto también era esperable, ya que el consumo no depende únicamente del ingreso total contemporáneo, sino también del error $\epsilon_{i,t}$ y de que el ingreso transitorio entra con un peso pequeño. En la gráfica de dispersión esto se observa en la nube de puntos: hay una tendencia ascendente bien definida, pero con dispersión alrededor de la recta de regresión.
+
+## (g) Relación entre el coeficiente estimado y la varianza de ingreso permanente.
+
+Bajo los supuestos de Friedman, se llega a la conclusión de que el coeficiente estimado de la regresión del consumo sobre el ingreso actual es la proporción de la variación total de ingreso actual que se debe a variación del ingreso permanente. Para probar que un aumento de la variación del ingreso permanente resulta en una efecto más importante del ingreso total sobre el consumo se realizan una serie de simulaciones.
+Se analiza cómo cambia el coeficiente estimado de la regresión entre consumo e ingreso total cuando varía la varianza del ingreso permanente. Para ello, se repite la simulación 150 veces para cada valor de $\sigma_P^2$, considerando valores entre 1 y 20. En cada caso se generan nuevamente los ingresos permanentes, los ingresos transitorios y el error $\epsilon_{i,t}$, se construyen el ingreso total y el consumo, y posteriormente se estima la regresión lineal del consumo sobre el ingreso total. Finalmente, para cada nivel de varianza del ingreso permanente se calcula el promedio del coeficiente estimado $\hat{\beta}$ y se grafica su relación con $\sigma_P^2$.
+
+.
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.width=6.2, fig.height=4.8, fig.align='center', out.width='85%'}
+library(dplyr)
+library(ggplot2)
+
+set.seed(456)
+
+sigma_P_vals <- 1:20
+n_sim <- 150
+
+resultados_g <- data.frame()
+
+for (s in sigma_P_vals) {
+  beta_hat <- numeric(n_sim)
+  
+  for (j in 1:n_sim) {
+    YP <- rnorm(n_personas, mean = 10, sd = sqrt(s))
+    
+    YP_mat <- matrix(
+      rep(YP, each = n_periodos),
+      nrow = n_personas,
+      ncol = n_periodos,
+      byrow = TRUE
+    )
+    
+    YT_mat <- matrix(
+      rnorm(n_personas * n_periodos, mean = 0, sd = sqrt(sigma_T)),
+      nrow = n_personas,
+      ncol = n_periodos,
+      byrow = TRUE
+    )
+    
+    eps_mat <- matrix(
+      rnorm(n_personas * n_periodos, mean = 0, sd = sqrt(sigma_e)),
+      nrow = n_personas,
+      ncol = n_periodos,
+      byrow = TRUE
+    )
+    
+    Y_mat <- YP_mat + YT_mat
+    C_mat <- YP_mat + 0.1 * YT_mat + eps_mat
+    
+    base_g <- data.frame(
+      Ingreso_total = as.vector(Y_mat),
+      Consumo = as.vector(C_mat)
+    )
+    
+    modelo_g <- lm(Consumo ~ Ingreso_total, data = base_g)
+    beta_hat[j] <- coef(modelo_g)[2]
+  }
+  
+  resultados_g <- rbind(
+    resultados_g,
+    data.frame(
+      sigma_P = s,
+      beta_promedio = mean(beta_hat)
+    )
+  )
+}
+
+ggplot(resultados_g, aes(x = sigma_P, y = beta_promedio)) +
+  geom_line(linewidth = 1, color = "red") +
+  geom_point(size = 2, color = "red") +
+  labs(
+    title = "Relación entre la pendiente estimada y la varianza del ingreso permanente",
+    subtitle = "Promedio de la pendiente estimada para distintos valores de la varianza del ingreso permanente",
+    x = expression("Varianza de " ~ Y[P]),
+    y = "Coeficiente estimado",
+    caption = "Fuente: elaboración propia."
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", color = "dodgerblue4"),
+    plot.subtitle = element_text(hjust = 0.5),
+    axis.title = element_text(face = "bold")
+  )
+```
+El resultado coincide con el desarrollo de Friedman y con la hipótesis de la caminata aleatoria de Hall, ya que mientras más alta es la variación del ingreso permanente, más sigue el consumo al patrón de ingresos. 
+
+## (h) Relación entre el coeficiente estimado y la varianza de ingreso transitorio.
+
+En este inciso se estudia cómo cambia la pendiente estimada de la regresión entre consumo e ingreso total cuando aumenta la varianza del ingreso transitorio. Para hacerlo, se mantiene fija la varianza del ingreso permanente y se hace variar $\sigma_T^2$ entre 1 y 20. Para cada uno de esos valores se repite la simulación 150 veces, generando nuevamente los ingresos, el consumo y la regresión correspondiente en cada repetición. Después, se extrae la pendiente estimada $\hat{\beta}$ en cada caso, se calcula su promedio para cada nivel de varianza del ingreso transitorio y finalmente se grafica esa relación. De esta manera, el ejercicio permite ver con mayor claridad cómo la importancia relativa del componente transitorio del ingreso afecta la asociación estimada entre ingreso corriente y consumo.
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.width=6.2, fig.height=4.8, fig.align='center', out.width='85%'}
+library(dplyr)
+library(ggplot2)
+
+set.seed(456)
+
+sigma_T_vals <- 1:20
+n_sim <- 150
+
+resultados_h <- data.frame()
+
+for (s in sigma_T_vals) {
+  beta_hat <- numeric(n_sim)
+  
+  for (j in 1:n_sim) {
+    YP <- rnorm(n_personas, mean = 10, sd = sqrt(sigma_P))
+    
+    YP_mat <- matrix(
+      rep(YP, each = n_periodos),
+      nrow = n_personas,
+      ncol = n_periodos,
+      byrow = TRUE
+    )
+    
+    YT_mat <- matrix(
+      rnorm(n_personas * n_periodos, mean = 0, sd = sqrt(s)),
+      nrow = n_personas,
+      ncol = n_periodos,
+      byrow = TRUE
+    )
+    
+    eps_mat <- matrix(
+      rnorm(n_personas * n_periodos, mean = 0, sd = sqrt(sigma_e)),
+      nrow = n_personas,
+      ncol = n_periodos,
+      byrow = TRUE
+    )
+    
+    Y_mat <- YP_mat + YT_mat
+    C_mat <- YP_mat + 0.1 * YT_mat + eps_mat
+    
+    base_h <- data.frame(
+      Ingreso_total = as.vector(Y_mat),
+      Consumo = as.vector(C_mat)
+    )
+    
+    modelo_h <- lm(Consumo ~ Ingreso_total, data = base_h)
+    beta_hat[j] <- coef(modelo_h)[2]
+  }
+  
+  resultados_h <- rbind(
+    resultados_h,
+    data.frame(
+      sigma_T = s,
+      beta_promedio = mean(beta_hat)
+    )
+  )
+}
+
+ggplot(resultados_h, aes(x = sigma_T, y = beta_promedio)) +
+  geom_line(linewidth = 1, color = "red") +
+  geom_point(size = 2, color = "red") +
+  labs(
+    title = "Relación entre la pendiente estimada y la varianza del ingreso transitorio",
+    subtitle = "Promedio de la pendiente estimada para distintos valores de la varianza del ingreso transitorio",
+    x = expression("Varianza de " ~ Y[T]),
+    y = "Coeficiente estimado",
+    caption = "Fuente: elaboración propia."
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", color = "dodgerblue4"),
+    plot.subtitle = element_text(hjust = 0.5),
+    axis.title = element_text(face = "bold")
+  )
+```
+La gráfica concuerda con la hipótesis del ingreso permanente de Friedman, cuando se estima una regresión del consumo sobre el ingreso corriente, la pendiente depende de qué proporción de la variación del ingreso observado proviene del componente permanente y qué proporción proviene del componente transitorio. En particular, si aumenta la varianza del ingreso transitorio mientras la del ingreso permanente permanece fija, una parte cada vez mayor de la dispersión del ingreso total se debe a fluctuaciones temporales que los individuos no traducen plenamente en consumo. Por eso, el consumo responde menos al ingreso corriente y la pendiente estimada disminuye. Intuitivamente, cuando las diferencias en ingreso entre individuos reflejan sobre todo choques transitorios, esas diferencias contienen poca información sobre el ingreso permanente, que es el verdadero determinante del consumo. Así, un aumento de $\sigma_T^2$ reduce el valor de $\hat{\beta}$, en línea con la predicción de Friedman de que el consumo se ajusta principalmente al ingreso permanente y solo de forma limitada al ingreso transitorio.
+
+## (i) Relación entre el coeficiente estimado y la varianza del error de medición.
+
+En este inciso se analiza cómo cambia la pendiente estimada de la regresión entre consumo e ingreso total cuando varía la varianza del error de medición. Para ello, se mantienen fijas \(\sigma_P^2\) y \(\sigma_T^2\), y se hace variar \(\sigma_\epsilon^2\) entre 1 y 20. Para cada valor se repite la simulación 150 veces, generando nuevamente los ingresos, el consumo y la regresión correspondiente en cada caso. Después, se obtiene el promedio de la pendiente estimada \(\hat{\beta}\) para cada nivel de varianza del error y se grafica su comportamiento, con el fin de observar cómo la presencia de una mayor perturbación aleatoria en el consumo afecta la relación estimada entre ingreso corriente y consumo.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.width=6.2, fig.height=4.8, fig.align='center', out.width='85%'}
+library(dplyr)
+library(ggplot2)
+
+set.seed(456)
+
+sigma_e_vals <- 1:20
+n_sim <- 150
+
+resultados_i <- data.frame()
+
+for (s in sigma_e_vals) {
+  beta_hat <- numeric(n_sim)
+  
+  for (j in 1:n_sim) {
+    YP <- rnorm(n_personas, mean = 10, sd = sqrt(sigma_P))
+    
+    YP_mat <- matrix(
+      rep(YP, each = n_periodos),
+      nrow = n_personas,
+      ncol = n_periodos,
+      byrow = TRUE
+    )
+    
+    YT_mat <- matrix(
+      rnorm(n_personas * n_periodos, mean = 0, sd = sqrt(sigma_T)),
+      nrow = n_personas,
+      ncol = n_periodos,
+      byrow = TRUE
+    )
+    
+    eps_mat <- matrix(
+      rnorm(n_personas * n_periodos, mean = 0, sd = sqrt(s)),
+      nrow = n_personas,
+      ncol = n_periodos,
+      byrow = TRUE
+    )
+    
+    Y_mat <- YP_mat + YT_mat
+    C_mat <- YP_mat + 0.1 * YT_mat + eps_mat
+    
+    base_i <- data.frame(
+      Ingreso_total = as.vector(Y_mat),
+      Consumo = as.vector(C_mat)
+    )
+    
+    modelo_i <- lm(Consumo ~ Ingreso_total, data = base_i)
+    beta_hat[j] <- coef(modelo_i)[2]
+  }
+  
+  resultados_i <- rbind(
+    resultados_i,
+    data.frame(
+      sigma_e = s,
+      beta_promedio = mean(beta_hat)
+    )
+  )
+}
+
+ggplot(resultados_i, aes(x = sigma_e, y = beta_promedio)) +
+  geom_line(linewidth = 1, color = "red") +
+  geom_point(size = 2, color = "red") +
+  labs(
+    title = "Relación entre la pendiente estimada\ny la varianza del error de medición",
+    subtitle = "Promedio de la pendiente estimada para distintos valores de la varianza del error de medición",
+    x = expression("Varianza de " ~ epsilon),
+    y = "Coeficiente estimado",
+    caption = "Fuente: elaboración propia."
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", color = "dodgerblue4", size = 13),
+    plot.subtitle = element_text(hjust = 0.5, size = 10),
+    axis.title = element_text(face = "bold"),
+    plot.caption = element_text(hjust = 1, size = 9)
+  )
+```
+
+La evidencia de la gráfica no muestra una relación consistente entre $\sigma_{\epsilon}^2$ y la pendiente estimada $\hat{\beta}$, aunque sí se observa una tendencia ligeramente a la baja, indicando a que le quita predominancia a la variación del ingreso permanente. Esto es consistente con la forma en que se definió el error de medición en el ejercicio: al ser independiente del ingreso, su aumento no modifica de manera sistemática la relación entre consumo e ingreso total, sino que añade variación aleatoria al consumo. En consecuencia, el efecto observado sobre $\hat{\beta}$ puede ser irregular y fluctuante. Asimismo, si $\epsilon_{i,t}$ se interpreta como cambios transitorios en preferencias o gastos no anticipados, también es natural que su incidencia sobre la pendiente estimada no siga una tendencia clara, pues introduce movimientos en el consumo que no provienen de cambios en los recursos permanentes.
+
+## Conclusión
+En conjunto, los resultados del ejercicio muestran que el consumo simulado mantiene una relación positiva con el ingreso total, pero menor que proporcional, lo cual es consistente con la hipótesis del ingreso permanente. Dado que el consumo fue construido principalmente a partir del ingreso permanente, mientras que el ingreso transitorio entra solo con un peso reducido y además se incorpora un término de error, la regresión entre consumo e ingreso corriente arroja una pendiente positiva, pero claramente menor que uno. Esto refleja que los individuos no ajustan plenamente su gasto ante variaciones temporales del ingreso, sino que suavizan su consumo en función de sus recursos de carácter más permanente. Asimismo, cuando aumenta la varianza del ingreso permanente, la pendiente estimada tiende a elevarse, mientras que cuando aumenta la varianza del ingreso transitorio, la pendiente tiende a disminuir. Este patrón coincide con la predicción de Friedman de que la relación entre consumo e ingreso corriente depende de qué proporción de la variación observada en el ingreso corresponde al componente permanente y qué proporción al componente transitorio. 
+Por su parte, los resultados también son compatibles, al menos de manera general, con la intuición de la caminata aleatoria del consumo desarrollada por Hall. Aunque en la simulación el consumo no fue generado exactamente como una caminata aleatoria, sí se impuso que respondiera solo de forma limitada a choques transitorios del ingreso, por lo que sus fluctuaciones resultan mucho más moderadas que las del ingreso total. En este sentido, el ejercicio reproduce la idea central de que el consumo no debe reaccionar uno a uno a variaciones temporales y previsibles del ingreso, sino únicamente en la medida en que estas alteren el ingreso permanente o la percepción de recursos de largo plazo. Finalmente, el comportamiento del error de medición muestra que, al ser independiente del ingreso, no produce un efecto completamente sistemático sobre la pendiente estimada, aunque sí introduce ruido adicional en la relación entre consumo e ingreso total. En conjunto, el ejercicio ilustra de manera clara que el consumo está más estrechamente vinculado al componente permanente del ingreso que a sus fluctuaciones transitorias, lo que constituye precisamente la principal implicación de la hipótesis del ingreso permanente y la base de la interpretación de Hall sobre la caminata aleatoria del consumo. 
