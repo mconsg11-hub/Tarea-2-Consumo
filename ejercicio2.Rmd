@@ -586,7 +586,7 @@ ggplot(resultados_i, aes(x = sigma_e, y = beta_promedio)) +
   geom_point(size = 2, color = "red") +
   labs(
     title = "Relación entre la pendiente estimada\ny la varianza del error de medición",
-    subtitle = "Promedio de la pendiente estimada para distintos valores de la varianza del error de medición",
+    subtitle = "Resultados promedio de las simulaciones",
     x = expression("Varianza de " ~ epsilon),
     y = "Coeficiente estimado",
     caption = "Fuente: elaboración propia."
