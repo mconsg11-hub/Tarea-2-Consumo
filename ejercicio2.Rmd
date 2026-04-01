@@ -228,7 +228,7 @@ ggplot(graf_d_larga, aes(x = as.numeric(Periodo), y = Error_medicion, group = Pe
 ```
 
 
-##(e) Matriz de consumos
+## (e) Matriz de consumos
 
 El consumo de los individuos se simula bajo el supuesto de que depende del ingreso permanente, de una fracción reducida del ingreso transitorio y de un error de medición. En particular, la regla (C_{i,t} = Y_i^P + 0.1Y_{i,t}^T + \epsilon_{i,t}) implica que el consumo está determinado principalmente por el componente permanente del ingreso, mientras que solo una pequeña parte del componente transitorio se incorpora al consumo corriente.
 
@@ -259,7 +259,7 @@ ggplot(graf_e_larga, aes(x = as.numeric(Periodo), y = Consumo, group = Persona, 
   scale_color_brewer(palette = "Dark2") +
   labs(
     title = "Consumo por persona y periodo",
-    subtitle = "Simulación de 20 agentes con consumo determinado por ingreso permanente, transitorio y error de medición",
+    subtitle = "Simulación del consumo de 20 agentes",
     x = "Periodo",
     y = "Consumo",
     caption = "Fuente: elaboración propia."
@@ -268,7 +268,8 @@ ggplot(graf_e_larga, aes(x = as.numeric(Periodo), y = Consumo, group = Persona, 
   theme(
     plot.title = element_text(hjust = 0.5, face = "bold", color = "dodgerblue4"),
     plot.subtitle = element_text(hjust = 0.5),
-    axis.title = element_text(face = "bold")
+    axis.title = element_text(face = "bold"),
+    plot.caption = element_text(hjust = 0.5)
   )
 ```
 
@@ -420,8 +421,8 @@ ggplot(resultados_g, aes(x = sigma_P, y = beta_promedio)) +
   geom_line(linewidth = 1, color = "red") +
   geom_point(size = 2, color = "red") +
   labs(
-    title = "Relación entre la pendiente estimada y la varianza del ingreso permanente",
-    subtitle = "Promedio de la pendiente estimada para distintos valores de la varianza del ingreso permanente",
+    title = "Relación entre la pendiente estimada\ny la varianza del ingreso permanente",
+    subtitle = "Resultados promedio de las simulaciones",
     x = expression("Varianza de " ~ Y[P]),
     y = "Coeficiente estimado",
     caption = "Fuente: elaboración propia."
@@ -430,7 +431,8 @@ ggplot(resultados_g, aes(x = sigma_P, y = beta_promedio)) +
   theme(
     plot.title = element_text(hjust = 0.5, face = "bold", color = "dodgerblue4"),
     plot.subtitle = element_text(hjust = 0.5),
-    axis.title = element_text(face = "bold")
+    axis.title = element_text(face = "bold"),
+    plot.caption = element_text(hjust = 0.5)
   )
 ```
 El resultado coincide con el desarrollo de Friedman y con la hipótesis de la caminata aleatoria de Hall, ya que mientras más alta es la variación del ingreso permanente, más sigue el consumo al patrón de ingresos. 
@@ -502,7 +504,7 @@ ggplot(resultados_h, aes(x = sigma_T, y = beta_promedio)) +
   geom_point(size = 2, color = "red") +
   labs(
     title = "Relación entre la pendiente estimada y la varianza del ingreso transitorio",
-    subtitle = "Promedio de la pendiente estimada para distintos valores de la varianza del ingreso transitorio",
+    subtitle = "Resultados promedio de las simulaciones",
     x = expression("Varianza de " ~ Y[T]),
     y = "Coeficiente estimado",
     caption = "Fuente: elaboración propia."
