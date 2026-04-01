@@ -1,9 +1,9 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (MiKTeX 26.2) (preloaded format=xelatex 2026.3.4)  1 APR 2026 00:31
+This is XeTeX, Version 3.141592653-2.6-0.999998 (MiKTeX 26.2) (preloaded format=xelatex 2026.3.4)  1 APR 2026 00:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**./ejercicio8.tex
-(ejercicio8.tex
+**./ejerciciosteóricos.tex
+(ejerciciosteóricos.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
 (C:\Users\mcons\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
@@ -707,8 +707,8 @@ File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count329
 )) (C:\Users\mcons\AppData\Local\Programs\MiKTeX\tex/latex/xurl\xurl.sty
 Package: xurl 2022/01/09 v 0.10 modify URL breaks
-) (ejercicio8.aux)
-\openout1 = `ejercicio8.aux'.
+) (ejerciciosteóricos.aux)
+\openout1 = `ejerciciosteóricos.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 75.
 LaTeX Font Info:    ... okay on input line 75.
@@ -1050,57 +1050,76 @@ Package hyperref Info: Link coloring OFF on input line 75.
 
 ]
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.0pt on input line 92.
+(Font)              scaled to size 7.0pt on input line 97.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.0pt on input line 92.
+(Font)              scaled to size 5.0pt on input line 97.
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 9
-2.
+7.
 (C:\Users\mcons\AppData\Local\Programs\MiKTeX\tex/latex/lm\omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.00092pt on input line 92.
+(Font)              scaled to size 10.00092pt on input line 97.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.00064pt on input line 92.
+(Font)              scaled to size 7.00064pt on input line 97.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.00046pt on input line 92.
+(Font)              scaled to size 5.00046pt on input line 97.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 9.99893pt on input line 92.
+(Font)              scaled to size 9.99893pt on input line 97.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 6.99925pt on input line 92.
+(Font)              scaled to size 6.99925pt on input line 97.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 4.99947pt on input line 92.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 92.
+(Font)              scaled to size 4.99947pt on input line 97.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 97.
 
 (C:\Users\mcons\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 ) (C:\Users\mcons\AppData\Local\Programs\MiKTeX\tex/latex/microtype\mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 92.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 97.
 
 (C:\Users\mcons\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (C:\Users\mcons\AppData\Local\Programs\MiKTeX\tex/latex/microtype\mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
-) [1] [2] [3] [4]
+)
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 12.0pt on input line 108.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 8.0pt on input line 108.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 6.0pt on input line 108.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 12.0011pt on input line 108.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 8.00073pt on input line 108.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 6.00055pt on input line 108.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 11.99872pt on input line 108.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 7.99915pt on input line 108.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 5.99936pt on input line 108.
+[1] [2] [3] [4] [5] [6]
 
 Package caption Warning: Unused \captionsetup[table] on input line 64.
 See the caption package documentation for explanation.
 
-[5] (ejercicio8.aux)
+[7] (ejerciciosteóricos.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 19759 strings out of 402983
- 358903 string characters out of 5448483
- 947663 words of memory out of 5000000
- 48272 multiletter control sequences out of 15000+600000
- 631242 words of font info for 70 fonts, out of 8000000 for 9000
+ 19842 strings out of 402983
+ 361323 string characters out of 5448483
+ 951510 words of memory out of 5000000
+ 48337 multiletter control sequences out of 15000+600000
+ 634164 words of font info for 92 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 90i,6n,114p,1009b,377s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,6n,114p,1017b,377s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on ejercicio8.pdf (6 pages).
+Output written on ejerciciosteóricos.pdf (8 pages).

@@ -31,7 +31,7 @@ editor_options:
 
 ## (a) Matriz de ingresos permanentes por persona en cada periodo
 
-Se simuló una muestra de 20 agentes, cada uno con un ingreso permanente individual generado aleatoriamente a partir de una distribución normal con media 10 y varianza (\sigma_P = 3). Esto implica que, aunque todos los agentes se concentran alrededor de un mismo nivel promedio de ingreso permanente, existe heterogeneidad entre ellos, de modo que algunos presentan valores por encima de 10 y otros por debajo. La dispersión observada en la gráfica refleja precisamente esa diferencia entre individuos, que en este ejercicio representa la variación del componente permanente del ingreso en la población.
+Se simuló una muestra de 20 agentes, cada uno con un ingreso permanente individual generado aleatoriamente a partir de una distribución normal con media 10 y varianza $\sigma_P = 3$. Esto implica que, aunque todos los agentes se concentran alrededor de un mismo nivel promedio de ingreso permanente, existe heterogeneidad entre ellos, de modo que algunos presentan valores por encima de 10 y otros por debajo. La dispersión observada en la gráfica refleja precisamente esa diferencia entre individuos, que en este ejercicio representa la variación del componente permanente del ingreso en la población.
 
 Una vez generado el ingreso permanente de cada agente, se construyó para cada uno un vector de 30 observaciones idénticas. Esto significa que, a lo largo de los 30 periodos, el ingreso permanente de cada persona permanece constante, por lo que la variación en esta parte del ejercicio ocurre únicamente entre personas y no dentro de cada una a través del tiempo. En la gráfica de barras se observa entonces el nivel de ingreso permanente constante asignado a cada agente, lo que permite visualizar de forma clara la distribución de este componente en la muestra simulada.
 
@@ -174,7 +174,7 @@ ggplot(graf_c_larga, aes(x = as.numeric(Periodo), y = Ingreso_total, group = Per
   )
 
 ```
-En la gráfica se logra apreciar que los patrones de ingresos de los individuos son altamente heterogéneos y no muestras tendencias a lo largo de los periodos claras. 
+En la gráfica se logra apreciar que los patrones de ingresos de los individuos son altamente heterogéneos y no muestras tendencias claras a lo largo de los periodos. 
 Al comparar la gráfica de ingreso transitorio con la de ingresos totales, se observa que el ingreso total conserva el mismo patrón de fluctuación que el ingreso transitorio, aunque en un nivel más alto. Esto se debe a que el ingreso permanente es constante para cada individuo, por lo que al sumarlo al componente transitorio únicamente desplaza verticalmente la trayectoria del ingreso total, sin alterar su comportamiento temporal.
 
 ## (d) Matriz de error de medición
@@ -232,7 +232,7 @@ ggplot(graf_d_larga, aes(x = as.numeric(Periodo), y = Error_medicion, group = Pe
 
 El consumo de los individuos se simula bajo el supuesto de que depende del ingreso permanente, de una fracción reducida del ingreso transitorio y de un error de medición. En particular, la regla (C_{i,t} = Y_i^P + 0.1Y_{i,t}^T + \epsilon_{i,t}) implica que el consumo está determinado principalmente por el componente permanente del ingreso, mientras que solo una pequeña parte del componente transitorio se incorpora al consumo corriente.
 
-Este supuesto no corresponde exactamente a una caminata aleatoria del consumo, pero sí es consistente con la idea de suavización intertemporal. Como únicamente el 10% del ingreso transitorio afecta el consumo del periodo, los individuos no ajustan completamente su gasto ante variaciones temporales del ingreso. En ese sentido, el consumo resulta menos volátil que el ingreso total y refleja que los choques transitorios tienen un efecto limitado sobre el gasto corriente.
+Este supuesto no corresponde exactamente a una caminata aleatoria del consumo, pero sí es consistente con la idea de que se suaviza intertemporalmente. Como únicamente el 10% del ingreso transitorio afecta el consumo del periodo, los individuos no ajustan completamente su gasto ante variaciones temporales del ingreso. En ese sentido, el consumo resulta menos volátil que el ingreso total y refleja que los choques transitorios tienen un efecto limitado sobre el gasto corriente.
 
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
@@ -274,7 +274,7 @@ ggplot(graf_e_larga, aes(x = as.numeric(Periodo), y = Consumo, group = Persona, 
 
 La gráfica de consumo muestra que, aunque cada individuo presenta fluctuaciones a lo largo del tiempo, estas son relativamente moderadas en comparación con las observadas en el ingreso transitorio y en el ingreso total. Esto se debe a que el consumo está determinado principalmente por el ingreso permanente, que permanece constante para cada persona, mientras que el ingreso transitorio solo afecta en una proporción reducida, igual a 0.1. Por ello, las trayectorias de consumo se mantienen relativamente estables y oscilan alrededor de un nivel propio para cada individuo.
 
-Asimismo, la separación entre las distintas líneas refleja la heterogeneidad en los ingresos permanentes de los agentes. Los movimientos de corto plazo alrededor de esos niveles responden al efecto parcial del ingreso transitorio y al error de medición. En conjunto, la gráfica es consistente con la idea de suavización del consumo, ya que los individuos no ajustan plenamente su gasto ante variaciones temporales del ingreso, sino que mantienen un patrón de consumo mucho más estable a lo largo del tiempo.
+Asimismo, la separación entre las distintas líneas refleja la heterogeneidad en los ingresos permanentes de los agentes. Los movimientos de corto plazo alrededor de esos niveles responden al efecto parcial del ingreso transitorio y al error de medición. En conjunto, la gráfica es consistente con la idea de que se suaviza el consumo, ya que los individuos no ajustan plenamente su gasto ante variaciones temporales del ingreso, sino que mantienen un patrón de consumo mucho más estable a lo largo del tiempo.
 
 ## (f) Relación lineal entre ingreso total y consumo
 
@@ -345,9 +345,7 @@ ggplot(base_f, aes(x = Ingreso_total, y = Consumo)) +
   )
 ```
 
-La estimación muestra una relación positiva entre el ingreso total y el consumo. El coeficiente asociado al ingreso total es $0.3915$, lo que indica que, en promedio, un aumento de una unidad en el ingreso total se asocia con un incremento de aproximadamente $0.39$ unidades en el consumo. Este resultado es consistente con la forma en que se construyó la simulación, ya que el consumo depende positivamente del ingreso, pero menos que proporcionalmente.
-
-Además, la pendiente estimada es claramente menor que uno, lo cual refleja que el consumo responde de manera más moderada que el ingreso total. Esto es coherente con la idea de suavización del consumo: aunque el ingreso total incorpora por completo el componente transitorio, el consumo solo recoge una fracción reducida de este, además de depender del ingreso permanente. Por ello, los choques transitorios en el ingreso no se traducen en cambios de la misma magnitud en el consumo.
+La estimación muestra una relación positiva entre el ingreso total y el consumo. El coeficiente asociado al ingreso total es $0.3915$, lo que indica que, en promedio, un aumento de una unidad en el ingreso total se asocia con un incremento de aproximadamente $0.39$ unidades en el consumo. Este resultado es consistente con la forma en que se construyó la simulación, ya que el consumo depende positivamente del ingreso, pero menos que proporcionalmente. Además, la pendiente estimada es claramente menor que uno, lo cual refleja que el consumo se mueve de manera más moderada que el ingreso total. 
 
 El intercepto estimado, igual a $6.5544$, indica que incluso cuando el ingreso total toma un valor cercano a cero, el consumo esperado no desaparece. En este contexto, esto puede interpretarse como el efecto del componente permanente promedio y del diseño mismo de la simulación, donde el consumo no depende exclusivamente del ingreso transitorio observado en cada periodo.
 
