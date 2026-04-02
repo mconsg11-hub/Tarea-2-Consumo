@@ -1,0 +1,656 @@
+---
+output: 
+  pdf_document:
+    number_sections: false
+    latex_engine: xelatex
+encoding: UTF-8
+header-includes:
+  - \usepackage{setspace}
+  - \onehalfspacing
+  - \usepackage{ragged2e}
+  - \AtBeginDocument{\justifying}
+  - \usepackage{amsmath}
+  - \usepackage{graphicx}
+  - \usepackage{caption}
+  - \captionsetup[table]{labelformat=empty}
+---
+
+\begin{titlepage}
+\centering
+\vspace*{3cm}
+{\Huge\bfseries Ejercicio 1 (teóricos) \par}
+\vspace{2cm}
+\end{titlepage}
+
+\section*{Ejercicio 8.2}
+**8.2. The average income of farmers is less than the average income of non-farmers, but fluctuates more from year to year. Given this, how does the permanent-income hypothesis predict that estimated consumption functions for farmers and nonfarmers differ?**
+
+La hipótesis del ingreso permanente establece que el consumo depende del ingreso permanente (esperado a largo plazo) y no del ingreso transitorio. Puesto que los agricultores tienen ingresos más volátiles (más componente transitorio), y los no agricultores tienen ingresos más estables (más componente permanente). 
+
+Si le damos la forma funcional al consumo corriente depende del ingreso permanente tal que:
+$$
+C_i = Y_i^P.
+$$
+Además, el ingreso observado puede descomponerse como
+$$
+Y_i = Y_i^P + Y_i^T,
+$$
+donde \(Y_i^P\) es el ingreso permanente y \(Y_i^T\) el ingreso transitorio.
+
+Si se estima la regresión
+$$
+C_i = a + bY_i + e_i,
+$$
+entonces, bajo los supuestos del modelo, el estimador de la pendiente es
+$$
+\hat b = \frac{\operatorname{var}(Y^P)}{\operatorname{var}(Y^P)+\operatorname{var}(Y^T)}.
+$$
+
+Como se supone que el ingreso transitorio tiene media cero, el ingreso promedio observado puede interpretarse como ingreso permanente promedio. Por lo tanto, el hecho de que los agricultores tengan menor ingreso promedio que los no agricultores implica que, en promedio,
+$$
+\overline{Y^P_A} < \overline{Y^P_{NA}}.
+$$
+
+Por otra parte, el enunciado dice que el ingreso de los agricultores fluctúa más de un año a otro. Esto puede interpretarse como que la varianza de su ingreso transitorio es mayor:
+$$
+\operatorname{var}(Y_A^T) > \operatorname{var}(Y_{NA}^T).
+$$
+
+Si aplicamos la expresión del estimador a ambos grupos, obtenemos:
+$$
+\hat b_F
+=
+\frac{\operatorname{var}(Y_F^P)}
+{\operatorname{var}(Y_F^P)+\operatorname{var}(Y_F^T)},
+\qquad
+\hat b_{NF}
+=
+\frac{\operatorname{var}(Y_{NF}^P)}
+{\operatorname{var}(Y_{NF}^P)+\operatorname{var}(Y_{NF}^T)}.
+$$
+
+Dado que para los agricultores la proporción de variación transitoria en el ingreso es mayor, la pendiente estimada de la función consumo-ingreso será menor para ellos que para los no agricultores. En consecuencia,
+$$
+\hat b_F < \hat b_{NF}.
+$$
+
+Por lo tanto, cuando una mayor parte de las fluctuaciones del ingreso observado es transitoria, dichas variaciones afectan poco al consumo, porque los individuos ajustan su gasto principalmente al ingreso permanente.
+
+\section*{Ejercicio 8.3: The time-averaging problem}
+
+
+Suponga que el consumo verdadero sigue un paseo aleatorio:
+
+$$
+C_t = C_{t-1} + e_t,
+\qquad e_t \sim WN(0,\sigma_e^2).
+$$
+
+La variable observada es el promedio de consumo en intervalos de dos períodos:
+$$
+\tilde C_t = \frac{C_t + C_{t+1}}{2}.
+$$
+
+Por tanto, el cambio en consumo medido entre dos intervalos consecutivos es
+$$
+\Delta \tilde C_t
+=
+\frac{C_{t+2}+C_{t+3}}{2}
+-
+\frac{C_t+C_{t+1}}{2}.
+$$
+
+## a) Expresión de \(\Delta \tilde{C}_t\) en función de las \(\varepsilon\)
+
+Primero escribimos \(C_{t+1}\), \(C_{t+2}\) y \(C_{t+3}\) en función de \(C_t\) y de las innovaciones:
+$$
+C_{t+1} = C_t + e_{t+1},
+$$
+$$
+C_{t+2} = C_{t+1} + e_{t+2} = C_t + e_{t+1}+e_{t+2},
+$$
+$$
+C_{t+3} = C_{t+2} + e_{t+3} = C_t + e_{t+1}+e_{t+2}+e_{t+3}.
+$$
+
+Sustituyendo en la expresión del cambio:
+$$
+\Delta \tilde C_t
+=
+\frac{(C_t+e_{t+1}+e_{t+2})+(C_t+e_{t+1}+e_{t+2}+e_{t+3})}{2}
+-
+\frac{C_t+(C_t+e_{t+1})}{2}.
+$$
+
+Simplificando:
+$$
+\Delta \tilde C_t
+=
+\frac{e_{t+3}+2e_{t+2}+e_{t+1}}{2}
+$$
+
+## b) Correlación de \(\Delta \tilde{C}_t\) con su rezago y carácter de random walk
+
+El valor anterior del cambio en consumo medido es
+$$
+\Delta \tilde C_{t-2}
+=
+\frac{C_t+C_{t+1}}{2}
+-
+\frac{C_{t-2}+C_{t-1}}{2}.
+$$
+
+Repitiendo el mismo procedimiento,
+$$
+\Delta \tilde C_{t-2}
+=
+\frac{e_{t+1}+2e_t+e_{t-1}}{2}
+$$
+
+Entonces, la covarianza entre cambios sucesivos es
+$$
+\operatorname{Cov}(\Delta \tilde C_t,\Delta \tilde C_{t-2})
+=
+\operatorname{Cov}
+\left(
+\frac{e_{t+3}+2e_{t+2}+e_{t+1}}{2},
+\frac{e_{t+1}+2e_t+e_{t-1}}{2}
+\right).
+$$
+
+Como los errores son incorrelacionados entre sí, el único término común en ambas expresiones es \(e_{t+1}\). Por ello,
+$$
+\operatorname{Cov}(\Delta \tilde C_t,\Delta \tilde C_{t-2})
+=
+\frac{1}{4}\sigma_e^2.
+$$
+
+Es decir,
+$$
+\operatorname{Cov}(\Delta \tilde C_t,\Delta \tilde C_{t-2})=\frac{\sigma_e^2}{4}>0
+$$
+
+Por lo tanto, el cambio en consumo medido está correlacionado con su rezago, de modo que el consumo medido no sigue un paseo aleatorio.
+
+$$
+\tilde C_t \text{ no es un random walk}
+$$
+
+## c) Correlación de \(\Delta \tilde{C}_t\) con la información disponible
+
+Del inciso (a),
+$$
+\Delta \tilde C_t
+=
+\frac{e_{t+3}+2e_{t+2}+e_{t+1}}{2}.
+$$
+
+Esta expresión depende de \(e_{t+1}\), que ya es conocido al final del período \(t+1\), el cual forma parte del primer intervalo de dos períodos \((t,t+1)\). Por lo tanto, el cambio en consumo medido de un intervalo al siguiente no es necesariamente incorrelacionado con todo lo conocido al inicio del siguiente intervalo de medición.
+
+En cambio, sí es incorrelacionado con todo lo conocido en el intervalo inmediatamente anterior, \((t-2,t-1)\), pues \(e_{t+1}\), \(e_{t+2}\) y \(e_{t+3}\) todavía no se conocen en ese momento y son incorrelacionados con innovaciones anteriores.
+
+## d) Caso alternativo: consumo medido como \(C_{t+1}, C_{t+3}, \dots\)
+
+Supóngase ahora que la medida observada no es el promedio de dos períodos, sino el consumo del segundo período de cada bloque; es decir, se observan
+$$
+C_{t+1},\; C_{t+3},\; C_{t+5},\dots
+$$
+
+En este caso, el cambio en consumo medido entre observaciones consecutivas es
+$$
+C_{t+3}-C_{t+1}.
+$$
+
+Como
+$$
+C_{t+3}=C_{t+1}+e_{t+2}+e_{t+3},
+$$
+tenemos
+$$
+C_{t+3}-C_{t+1}=e_{t+2}+e_{t+3}
+$$
+
+El cambio anterior sería
+$$
+C_{t+1}-C_{t-1}=e_t+e_{t+1}.
+$$
+
+Entonces,
+$$
+\operatorname{Cov}\big((C_{t+3}-C_{t+1}),(C_{t+1}-C_{t-1})\big)
+=
+\operatorname{Cov}(e_{t+2}+e_{t+3},\,e_t+e_{t+1})=0.
+$$
+
+Como los cambios sucesivos están formados por innovaciones disjuntas e incorrelacionadas, el consumo medido sí sigue un paseo aleatorio en este caso.
+
+$$
+\text{Sí, el consumo medido es un random walk}
+$$
+
+# Ejercicio 8.6.
+
+
+Se tiene que:
+
+$$
+C_t=\frac{r}{1+r}\left[A_t+\sum_{s=0}^{\infty}\frac{E_t[Y_{t+s}]}{(1+r)^s}\right]
+$$
+
+y
+
+$$
+A_{t+1}=(1+r)(A_t+Y_t-C_t).
+$$
+
+## a) Demostrar que \(E_t[C_{t+1}] = C_t\)
+
+Partimos de la expresión para el consumo en \(t+1\):
+
+$$
+C_{t+1}=\frac{r}{1+r}\left[A_{t+1}+\sum_{s=0}^{\infty}\frac{E_{t+1}[Y_{t+1+s}]}{(1+r)^s}\right].
+$$
+
+Tomando esperanza condicional en \(t\):
+
+$$
+E_t[C_{t+1}]
+=
+\frac{r}{1+r}
+\left[
+E_t(A_{t+1})+\sum_{s=0}^{\infty}\frac{E_t(E_{t+1}[Y_{t+1+s}])}{(1+r)^s}
+\right].
+$$
+
+Por la ley de expectativas iteradas,
+
+$$
+E_t(E_{t+1}[Y_{t+1+s}])=E_t[Y_{t+1+s}].
+$$
+
+Además, como
+
+$$
+A_{t+1}=(1+r)(A_t+Y_t-C_t),
+$$
+
+y todas las variables del lado derecho son conocidas en \(t\), se sigue que
+
+$$
+E_t(A_{t+1})=(1+r)(A_t+Y_t-C_t).
+$$
+
+Sustituyendo:
+
+$$
+E_t[C_{t+1}]
+=
+\frac{r}{1+r}
+\left[
+(1+r)(A_t+Y_t-C_t)+\sum_{s=0}^{\infty}\frac{E_t[Y_{t+1+s}]}{(1+r)^s}
+\right].
+$$
+
+Reordenando términos:
+
+$$
+E_t[C_{t+1}]
+=
+r(A_t+Y_t-C_t)+
+\frac{r}{1+r}\sum_{s=0}^{\infty}\frac{E_t[Y_{t+1+s}]}{(1+r)^s}.
+$$
+
+Usando la definición original de \(C_t\),
+
+$$
+C_t=\frac{r}{1+r}\left[A_t+Y_t+\sum_{s=1}^{\infty}\frac{E_t[Y_{t+s}]}{(1+r)^s}\right],
+$$
+
+se concluye que
+
+$$
+E_t[C_{t+1}] = C_t.
+$$
+
+Por lo tanto, el consumo sigue una caminata aleatoria:
+
+$$
+C_{t+1}=C_t+\varepsilon_{t+1},
+\qquad E_t[\varepsilon_{t+1}]=0.
+$$
+
+Además, si el consumo sigue una random walk, entonces para todo \(s\geq 0\),
+
+$$
+E_t[C_{t+s}] = C_t.
+$$
+
+Así,
+
+$$
+\sum_{s=0}^{\infty}\frac{E_t[C_{t+s}]}{(1+r)^s}
+=
+\sum_{s=0}^{\infty}\frac{C_t}{(1+r)^s}
+=
+C_t \sum_{s=0}^{\infty}\left(\frac{1}{1+r}\right)^s.
+$$
+
+Como la suma geométrica converge a \(\frac{1+r}{r}\), obtenemos
+
+$$
+\sum_{s=0}^{\infty}\frac{E_t[C_{t+s}]}{(1+r)^s}
+=
+\frac{1+r}{r}C_t.
+$$
+
+Sustituyendo la expresión de \(C_t\),
+
+$$
+\sum_{s=0}^{\infty}\frac{E_t[C_{t+s}]}{(1+r)^s}
+=
+A_t+\sum_{s=0}^{\infty}\frac{E_t[Y_{t+s}]}{(1+r)^s}.
+$$
+
+## b) Si \(\Delta Y_t=\phi \Delta Y_{t-1}+u_t\), con \(u_t\) ruido blanco y \(u_t=1\), ¿cuánto aumenta el consumo?
+
+La innovación en consumo es
+
+$$
+C_t-E_{t-1}[C_t]
+=
+\frac{r}{1+r}
+\sum_{s=0}^{\infty}
+\frac{E_t[Y_{t+s}]-E_{t-1}[Y_{t+s}]}{(1+r)^s}.
+$$
+
+Si \(u_t=1\), entonces el ingreso actual supera su valor esperado en una unidad:
+
+$$
+Y_t-E_{t-1}[Y_t]=1.
+$$
+
+Además, como
+
+$$
+\Delta Y_{t+1}=\phi \Delta Y_t+u_{t+1},
+$$
+
+el cambio esperado en \(\Delta Y_{t+1}\) es \(\phi\), y por tanto el nivel esperado de \(Y_{t+1}\) aumenta en \(1+\phi\).
+
+De forma análoga, en \(t+2\) el nivel esperado de ingreso aumenta en
+
+$$
+1+\phi+\phi^2,
+$$
+
+y en general, para \(s\geq 0\),
+
+$$
+E_t[Y_{t+s}] - E_{t-1}[Y_{t+s}] = 1+\phi+\phi^2+\cdots+\phi^s.
+$$
+
+Entonces,
+
+$$
+\sum_{s=0}^{\infty}
+\frac{E_t[Y_{t+s}]-E_{t-1}[Y_{t+s}]}{(1+r)^s}
+=
+\frac{1+r}{r}\cdot\frac{1+r}{1+r-\phi}.
+$$
+
+Por lo tanto,
+
+$$
+C_t-E_{t-1}[C_t]
+=
+\frac{1+r}{1+r-\phi}.
+$$
+
+Así, si \(u_t=1\), el consumo aumenta en
+
+$$
+\Delta C_t = \frac{1+r}{1+r-\phi}.
+$$
+
+## c) Comparación de varianzas
+
+Del inciso anterior,
+
+$$
+C_t-E_{t-1}[C_t]
+=
+\frac{1+r}{1+r-\phi}u_t.
+$$
+
+Luego,
+
+$$
+\operatorname{Var}(C_t-E_{t-1}[C_t])
+=
+\left(\frac{1+r}{1+r-\phi}\right)^2 \operatorname{Var}(u_t).
+$$
+
+Si \(\phi>0\), entonces
+
+$$
+\frac{1+r}{1+r-\phi}>1,
+$$
+
+por lo que
+
+$$
+\operatorname{Var}(C_t-E_{t-1}[C_t]) > \operatorname{Var}(u_t).
+$$
+
+Por tanto, la innovación en el consumo tiene mayor varianza que la innovación en el ingreso.
+
+La intuición es que una innovación en el ingreso no sólo afecta el ingreso actual, sino que hace que el consumidor espere cambios adicionales en el mismo sentido en periodos futuros. Por eso el consumo responde al cambio en el ingreso permanente esperado, y su innovación puede ser mayor que la innovación contemporánea del ingreso.
+
+Sin embargo, no es claro afirmar que en este modelo los consumidores suavizan el consumo respecto al ingreso, porque el ingreso no es estacionario y entonces no es obvio qué significa exactamente suavizarlo.
+
+# Ejercicio 8.12
+
+\textbf{8.12. Consumption of durable goods. (Mankiw, 1982).} \\
+\textbf{Suppose that, as in Section 8.2, the instantaneous utility function is quadratic and the interest rate and the discount rate are zero. Suppose, however, that goods are durable; specifically,}
+$C_t = (1-\delta)C_{t-1} + X_t$, where $X_t$ is purchases in period $t$ and $0 \leq \delta \leq 1$.
+
+\textbf{(a) Consider a marginal reduction in purchases in period $t$ of $dX_t$. Find values of $dX_{t+1}$ and $dX_{t+2}$ such that the combined changes in $X_t$, $X_{t+1}$, and $X_{t+2}$ leave the present value of spending unchanged (so $dX_t + dX_{t+1} + dX_{t+2} = 0$) and leave $C_{t+2}$ unchanged (so $(1-\delta)^2 dX_t + (1-\delta)dX_{t+1} + dX_{t+2} = 0$).}
+
+\textbf{ (b) What is the effect of the change in part (a) on $C_t$ and $C_{t+1}$? What is the effect on expected utility?}
+
+\textbf{(c) What condition must $C_t$ and $E_t[C_{t+1}]$ satisfy for the change in part (a) not to affect expected utility? Does $C$ follow a random walk?}
+
+\textbf{(d) Does $X$ follow a random walk? (Hint: Write $X_t - X_{t-1}$ in terms of $C_t - C_{t-1}$ and $C_{t-1} - C_{t-2}$.) Explain intuitively why or why not. If $\delta = 0$, what is the behavior of $C$ and $X$?}
+
+
+
+Supóngase utilidad cuadrática, tasa de interés cero y bienes durables:
+
+$$
+C_t=(1-\delta)C_{t-1}+X_t,
+\qquad 0\leq \delta <1.
+$$
+
+donde \(X_t\) son las compras de bienes durables.
+
+## a) Encontrar \(dX_{t+1}\) y \(dX_{t+2}\)
+
+Se busca una reducción marginal en compras en \(t\), \(dX_t<0\), tal que:
+
+1. El valor presente del gasto no cambie:
+
+$$
+dX_t+dX_{t+1}+dX_{t+2}=0
+$$
+
+2. \(C_{t+2}\) no cambie:
+
+$$
+(1-\delta)^2 dX_t + (1-\delta)dX_{t+1}+dX_{t+2}=0.
+$$
+
+De la primera ecuación:
+
+$$
+dX_{t+2}=-dX_t-dX_{t+1}.
+$$
+
+Sustituyendo en la segunda:
+
+$$
+(1-\delta)^2 dX_t + (1-\delta)dX_{t+1}-dX_t-dX_{t+1}=0.
+$$
+
+Agrupando términos:
+
+$$
+[(1-\delta)^2-1]dX_t + [(1-\delta)-1]dX_{t+1}=0.
+$$
+
+Esto implica
+
+$$
+(-2\delta+\delta^2)dX_t-\delta dX_{t+1}=0,
+$$
+
+y por tanto
+
+$$
+dX_{t+1}=(\delta-2)dX_t.
+$$
+
+Finalmente,
+
+$$
+dX_{t+2}=-dX_t-(\delta-2)dX_t=(1-\delta)dX_t.
+$$
+
+## b) Efecto sobre \(C_t\) y \(C_{t+1}\)
+
+Como
+
+$$
+C_t=(1-\delta)C_{t-1}+X_t,
+$$
+
+se tiene
+
+$$
+dC_t=dX_t.
+$$
+
+Y como
+
+$$
+C_{t+1}=(1-\delta)C_t+X_{t+1},
+$$
+
+entonces
+
+$$
+dC_{t+1}=(1-\delta)dC_t+dX_{t+1}.
+$$
+
+Sustituyendo \(dC_t=dX_t\) y \(dX_{t+1}=(\delta-2)dX_t\),
+
+$$
+dC_{t+1}=(1-\delta)dX_t+(\delta-2)dX_t=-dX_t.
+$$
+
+Por tanto,
+
+$$
+dC_t=dX_t,
+\qquad
+dC_{t+1}=-dX_t.
+$$
+
+Si \(dX_t<0\), el consumo cae en \(t\) y sube en \(t+1\).
+
+Como \(C_{t+2}\) no cambia por construcción, sólo importa el efecto sobre utilidad esperada en \(t\) y \(t+1\). Dado que la utilidad es cuadrática, este cambio aumenta la variabilidad temporal del consumo y empeora la utilidad esperada.
+
+## c) Condición para que el cambio no afecte utilidad esperada
+
+Con utilidad cuadrática,
+
+$$
+u'(C_t)=1-aC_t.
+$$
+
+Para que el cambio no afecte utilidad esperada, la pérdida marginal en \(t\) debe igualar el beneficio marginal esperado en \(t+1\):
+
+$$
+(1-aC_t)dX_t + E_t[(1-aC_{t+1})(-dX_t)] = 0.
+$$
+
+Cancelando \(dX_t\),
+
+$$
+1-aC_t = E_t[1-aC_{t+1}].
+$$
+
+Reordenando,
+
+$$
+C_t = E_t[C_{t+1}].
+$$
+
+Por lo tanto, el consumo sigue una caminata aleatoria: el mejor pronóstico del consumo futuro es el consumo actual.
+
+## d) ¿\(X_t\) sigue una caminata aleatoria?
+
+De
+
+$$
+C_t=(1-\delta)C_{t-1}+X_t
+$$
+
+despejamos
+
+$$
+X_t=C_t-(1-\delta)C_{t-1}.
+$$
+
+Análogamente,
+
+$$
+X_{t-1}=C_{t-1}-(1-\delta)C_{t-2}.
+$$
+
+Restando,
+
+$$
+X_t-X_{t-1}
+=
+(C_t-C_{t-1})-(1-\delta)(C_{t-1}-C_{t-2}).
+$$
+
+Es decir,
+
+$$
+\Delta X_t=\Delta C_t-(1-\delta)\Delta C_{t-1}.
+$$
+
+Si \(C_t\) sigue una random walk, entonces
+
+$$
+C_t=C_{t-1}+u_t,
+$$
+
+con \(E_{t-1}[u_t]=0\), por lo que
+
+$$
+\Delta X_t = u_t-(1-\delta)u_{t-1}.
+$$
+
+Así, \(X_t\) no sigue una caminata aleatoria, porque el cambio en compras tiene un componente predecible a partir de la innovación pasada del consumo.
+
+Intuitivamente, si el consumo deseado sube en \(t-1\), las compras de durables aumentan en ese periodo. Pero como parte de esos bienes todavía sigue disponible en \(t\), en el siguiente periodo no hace falta volver a comprar la misma cantidad. Por eso las compras presentan reversión parcial.
+
+Si \(\delta=0\), entonces
+
+$$
+\Delta X_t=u_t-u_{t-1},
+$$
+
+de modo que las compras caen completamente al periodo siguiente, porque no hay depreciación y los bienes adquiridos antes siguen intactos.
