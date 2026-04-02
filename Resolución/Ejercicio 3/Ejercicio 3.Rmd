@@ -528,7 +528,7 @@ kable(
     font_size = 10
   ) |>
   footnote(
-    general = TeX("Fuente: elaboración propia. Filtro Hodrick-Prescott ($\\lambda$ = 1600)."),
+    general = TeX("Fuente: elaboración propia. Filtro Hodrick-Prescott (lambda = 1600)."),
     general_title = "",
     threeparttable = TRUE
   )
@@ -815,8 +815,6 @@ kable(
   )
 ```
 
-\subsubsection*{Conclusión comparativa sobre los filtros}
-
 A partir de los resultados anteriores, se comparan las distintas metodologías de eliminación de tendencia en términos de suavidad, interpretación económica y capacidad para identificar comovimientos entre las variables.
 
 Los resultados muestran que los distintos métodos de filtrado capturan patrones cíclicos similares, pero con diferencias importantes en su suavidad y volatilidad. El filtro HP produce series relativamente suaves y facilita la identificación de fluctuaciones de mediano plazo, mientras que el filtro Band-Pass aísla con mayor precisión los ciclos económicos, eliminando componentes de muy baja y muy alta frecuencia.
@@ -825,7 +823,7 @@ Por su parte, el filtro Beveridge-Nelson genera componentes cíclicos más volá
 
 En todos los casos, se observa un claro comovimiento entre el consumo y el PIB, particularmente en México, donde las covarianzas son positivas y elevadas. La inversión presenta mayor volatilidad relativa, mientras que el gasto público muestra menor variabilidad.
 
-En conjunto, los resultados sugieren que, independientemente del filtro utilizado, existe una fuerte sincronización entre las variables macroeconómicas, aunque la magnitud de las fluctuaciones depende del método de extracción de tendencia.
+Los resultados sugieren que, independientemente del filtro utilizado, existe una fuerte sincronización entre las variables macroeconómicas, aunque la magnitud de las fluctuaciones depende del método de extracción de tendencia.
 
 
 \subsection*{(d) Relación entre consumo y producto agregado}
