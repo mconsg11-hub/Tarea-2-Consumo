@@ -1,4 +1,11 @@
 ---
+title: |
+  | \vspace{5cm} \textbf{\huge Tarea 2: Consumo en México}
+  | \vspace{1cm} \Large Análisis Macroeconómico y Microeconómico
+author: |
+  | \vspace{3cm} \textbf{Autor:}
+  | Brenda Miranda
+date: ""
 output: 
   pdf_document:
     number_sections: false
@@ -11,18 +18,21 @@ header-includes:
   - \usepackage{graphicx}
   - \usepackage{caption}
   - \captionsetup[table]{labelformat=empty}
-editor_options: 
-  markdown: 
-    wrap: 72
+  - \usepackage[margin=1in]{geometry}
+  - \usepackage{indentfirst}
+  - \setlength{\parindent}{1cm}
+  - \usepackage{titlesec}
+  - \titleformat{\section}{\normalfont\Large\bfseries}{}{0pt}{}
+  - \titleformat{\subsection}{\normalfont\large\bfseries}{}{0pt}{}
+fontsize: 12pt
 ---
 
-# Resultados de la Tarea 2: Consumo
-
-Este documento contiene los resultados obtenidos de los ejercicios 5, 6 y 7.
+\newpage
+\pagenumbering{arabic}
 
 ## Ejercicio 5: Comportamiento reciente del consumo en México y sus determinantes
 
-**(a) Obtenga datos trimestrales de México, para “C”, el consumo agregado, el consumo agregado bienes importados y nacionales.**
+### (a) Datos trimestrales de consumo agregado
 
 Los datos fueron obtenidos del Banco de Información Económica (BIE) del INEGI, utilizando las series desestacionalizadas a precios constantes de 2018 para el periodo 2000-2023.
 
@@ -34,13 +44,23 @@ Se utilizaron las series del Sistema de Información Económica (SIE) de BANXICO
 
 En la siguiente gráfica se observa la evolución de los tres componentes del consumo. Destaca la caída pronunciada en el consumo de bienes importados durante las crisis de 2009 y 2020, evidenciando su alta sensibilidad a choques macroeconómicos.
 
+\begin{center}
 ![Comparación visual del consumo en niveles](output/grafica_5c_niveles.png)
+\end{center}
+\begin{center}
+\textit{Fuente: elaboración propia.}
+\end{center}
 
 **(d) Filtre todas las series para remover la tendencia por medio de obtener su tasa de cambio anual, grafique las series filtradas juntas para identificar sus movimientos cíclicos y obtenga su matriz de varianzas y covarianzas.**
 
 Se aplicó el filtro de tasa de crecimiento anual para aislar el componente cíclico. La volatilidad (desviación estándar) del consumo importado (11.38%) resultó ser significativamente mayor que la del consumo nacional (4.20%).
 
+\begin{center}
 ![Tasas de crecimiento anual (Ciclos)](output/grafica_5d_growth.png)
+\end{center}
+\begin{center}
+\textit{Fuente: elaboración propia.}
+\end{center}
 
 **Matriz de Varianza-Covarianza de las Tasas de Crecimiento:**
 
@@ -62,11 +82,11 @@ Con base en el análisis de correlaciones del componente cíclico (Filtro HP), s
 
 ## Ejercicio 6: Nivel de riqueza neta de los hogares (ENFIH-2019)
 
-**(a) Baje los microdatos de la ENFIH del sitio del INEGI.**
+### (a) Microdatos de la ENFIH-2019
 
 Se descargaron los microdatos de la Encuesta Nacional sobre las Finanzas de los Hogares (ENFIH) 2019. Se utilizaron principalmente las tablas concentradora y de módulos.
 
-**(b) Tabule el nivel de riqueza neta de los hogares de acuerdo al tamaño de la localidad en la que radican.**
+### (b) Riqueza neta por tamaño de localidad
 
 Se calculó la riqueza neta media ponderada por el factor de expansión (`FAC_HOG`). Los resultados muestran una correlación positiva entre el tamaño de la localidad y el nivel de riqueza acumulada.
 
@@ -81,7 +101,12 @@ Se calculó la riqueza neta media ponderada por el factor de expansión (`FAC_HO
 
 La gráfica de dispersión (en escala logarítmica) revela una relación positiva y significativa entre el ingreso mensual y la riqueza neta. Sin embargo, existe una alta dispersión en los niveles bajos de ingreso, lo que sugiere que factores como la herencia o la antigüedad del hogar (teoría del ciclo de vida) juegan un papel crucial en la acumulación de activos.
 
+\begin{center}
 ![Relación Ingreso vs Riqueza Neta](output/grafica_6c_dispersion.png)
+\end{center}
+\begin{center}
+\textit{Fuente: elaboración propia.}
+\end{center}
 
 **(d) Haga un tabulado de las respuestas sobre la forma en que atienden gastos imprevistos, de acuerdo al tamaño de la localidad en la que radican.**
 
@@ -103,15 +128,21 @@ Se analizó la proporción de hogares que recurrieron a diferentes mecanismos pa
 
 ## Ejercicio 7: Acertijo del premio al riesgo
 
-**(a) Consiga los valores anuales de IPC, el Indice de Precios y Cotizaciones de la Bolsa Mexicana de Valores, del NASDAQ y de otro índice de acciones (Ej 3: Canadá, TSX) por lo menos desde 1990.**
+### (a) Rendimientos de índices accionarios internacionales
 
 Se obtuvieron los rendimientos anuales históricos (1990-2024) para el IPC (México), NASDAQ (EE. UU.) y el S&P/TSX Composite (Canadá).
 
-**(b) Calcule su tasa de retorno nominal para cada año.**
+### (b) Rendimientos nominales anuales
 
 Se calcularon los rendimientos nominales $r_{s,t}$ para cada índice a partir de la variación porcentual anual de sus niveles de cierre. En la siguiente gráfica se observa la evolución de los rendimientos nominales anuales para los tres índices analizados. Destaca la alta volatilidad del NASDAQ en comparación con el TSX y el IPC.
 
+
+\begin{center}
 ![Rendimientos Nominales Anuales (1990-2024)](output/grafica_7b_retornos.png)
+\end{center}
+\begin{center}
+\textit{Fuente: elaboración propia.}
+\end{center}
 
 **(c) Consiga los valores promedio anual de la tasa de interés de la tasa de interés a un año, para el periodo que esté disponible, para los tres países.**
 
@@ -125,7 +156,12 @@ Se utilizaron las tasas de Cetes a 28 días para México y las tasas de las Letr
 
 La siguiente gráfica muestra la evolución de estas tasas:
 
+\begin{center}
 ![Evolución de las Tasas Libres de Riesgo (1990-2024)](output/grafica_7c_rf.png)
+\end{center}
+\begin{center}
+\textit{Fuente: elaboración propia.}
+\end{center}
 
 **(d) Calcule la diferencia entre el retorno del mercado de valores y el retorno de invertir a la tasa a un año, para el periodo que esté disponible, para los tres países.**
 
@@ -167,7 +203,12 @@ Utilizando la fórmula $\gamma = \frac{E[r_s - r_f]}{\text{Cov}(r_s - r_f, \Delt
 | EE. UU. | -1837.19 | **44.91** | -175.70 |
 | Canadá | 97.17 | **27.07** | 185.06 |
 
+\begin{center}
 ![Coeficientes Gamma por Tipo de Consumo](output/grafica_7e_gammas.png)
+\end{center}
+\begin{center}
+\textit{Fuente: elaboración propia.}
+\end{center}
 
 **(j) Interprete sus resultados.**
 
