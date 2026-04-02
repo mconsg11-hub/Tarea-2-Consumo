@@ -1,38 +1,24 @@
----
-title: |
-  | \vspace{5cm} \textbf{\huge Tarea 2: Consumo en México}
-  | \vspace{1cm} \Large Análisis Macroeconómico y Microeconómico
-author: |
-  | \vspace{3cm} \textbf{Autor:}
-  | Brenda Miranda
-date: ""
-output: 
-  pdf_document:
-    number_sections: false
-    latex_engine: xelatex
-header-includes:
-  - \usepackage{setspace}
-  - \onehalfspacing
-  - \usepackage{ragged2e}
-  - \AtBeginDocument{\justifying}
-  - \usepackage{graphicx}
-  - \usepackage{caption}
-  - \captionsetup[table]{labelformat=empty}
-  - \usepackage[margin=1in]{geometry}
-  - \usepackage{indentfirst}
-  - \setlength{\parindent}{1cm}
-  - \usepackage{titlesec}
-  - \titleformat{\section}{\normalfont\Large\bfseries}{}{0pt}{}
-  - \titleformat{\subsection}{\normalfont\large\bfseries}{}{0pt}{}
-fontsize: 12pt
----
 
-\newpage
-\pagenumbering{arabic}
 
-## Ejercicio 5: Comportamiento reciente del consumo en México y sus determinantes
+## 
 
-### (a) Datos trimestrales de consumo agregado
+
+
+
+
+
+
+
+
+# <h2 align="center">Ejercicio 5: Comportamiento reciente del consumo en México y sus determinantes </h2>
+
+
+
+<div align="center">Autor: Brenda Evelyn Villegas García<div/>
+
+</div>
+
+**(a) Datos trimestrales de consumo agregado**
 
 Los datos fueron obtenidos del Banco de Información Económica (BIE) del INEGI, utilizando las series desestacionalizadas a precios constantes de 2018 para el periodo 2000-2023.
 
@@ -64,34 +50,34 @@ Se aplicó el filtro de tasa de crecimiento anual para aislar el componente cíc
 
 **Matriz de Varianza-Covarianza de las Tasas de Crecimiento:**
 
-| Componente | Total | Nacional | Importado |
-|------------|-------|----------|-----------|
-| **Total** | 0.001976 | 0.001818 | 0.004282 |
-| **Nacional** | 0.001818 | 0.001766 | 0.003441 |
-| **Importado** | 0.004282 | 0.003441 | 0.012943 |
+| Componente    | Total    | Nacional | Importado |
+| ------------- | -------- | -------- | --------- |
+| **Total**     | 0.001976 | 0.001818 | 0.004282  |
+| **Nacional**  | 0.001818 | 0.001766 | 0.003441  |
+| **Importado** | 0.004282 | 0.003441 | 0.012943  |
 
 **(e) Redacte una conclusión sobre el impacto del de la tasa de interés y el tipo de cambio sobre el consumo.**
 
 Con base en el análisis de correlaciones del componente cíclico (Filtro HP), se concluye lo siguiente:
 
-1.  **Tipo de Cambio:** Existe una correlación negativa de **-0.151** entre el consumo total y el tipo de cambio. Esto indica que una depreciación del peso mexicano tiende a reducir el consumo agregado. El canal principal es el encarecimiento de los bienes importados (efecto precio relativo) y la posible reducción de la riqueza neta de los hogares con deuda o compromisos en moneda extranjera.
-2.  **Tasa de Interés Real:** Se observa una correlación positiva débil de **0.103**. Este resultado, aunque contraintuitivo respecto al efecto sustitución (que sugeriría una relación negativa), refleja la realidad de la economía mexicana donde los incrementos en la tasa real coinciden con periodos de expansión económica impulsados por la demanda externa. Además, sugiere que el **efecto ingreso** de los ahorradores o la expansión del crédito durante las fases de auge compensan el desincentivo al consumo presente derivado de mayores tasas.
-3.  **Diferenciación por origen:** La volatilidad extrema del consumo importado confirma que este rubro actúa como el principal "amortiguador" del gasto de los hogares ante choques en el tipo de cambio y las condiciones financieras internacionales.
+1. **Tipo de Cambio:** Existe una correlación negativa de **-0.151** entre el consumo total y el tipo de cambio. Esto indica que una depreciación del peso mexicano tiende a reducir el consumo agregado. El canal principal es el encarecimiento de los bienes importados (efecto precio relativo) y la posible reducción de la riqueza neta de los hogares con deuda o compromisos en moneda extranjera.
+2. **Tasa de Interés Real:** Se observa una correlación positiva débil de **0.103**. Este resultado, aunque contraintuitivo respecto al efecto sustitución (que sugeriría una relación negativa), refleja la realidad de la economía mexicana donde los incrementos en la tasa real coinciden con periodos de expansión económica impulsados por la demanda externa. Además, sugiere que el **efecto ingreso** de los ahorradores o la expansión del crédito durante las fases de auge compensan el desincentivo al consumo presente derivado de mayores tasas.
+3. **Diferenciación por origen:** La volatilidad extrema del consumo importado confirma que este rubro actúa como el principal "amortiguador" del gasto de los hogares ante choques en el tipo de cambio y las condiciones financieras internacionales.
 
 ---
 
 ## Ejercicio 6: Nivel de riqueza neta de los hogares (ENFIH-2019)
 
-### (a) Microdatos de la ENFIH-2019
+**(a) Baje los microdatos de la ENFIH del sitio del INEGI.**
 
 Se descargaron los microdatos de la Encuesta Nacional sobre las Finanzas de los Hogares (ENFIH) 2019. Se utilizaron principalmente las tablas concentradora y de módulos.
 
-### (b) Riqueza neta por tamaño de localidad
+**(b) Tabule el nivel de riqueza neta de los hogares de acuerdo al tamaño de la localidad en la que radican.**
 
 Se calculó la riqueza neta media ponderada por el factor de expansión (`FAC_HOG`). Los resultados muestran una correlación positiva entre el tamaño de la localidad y el nivel de riqueza acumulada.
 
 | Tamaño de Localidad | Riqueza Neta Media | Activos Medios | Deuda Media |
-|---------------------|--------------------|----------------|-------------|
+| ------------------- | ------------------ | -------------- | ----------- |
 | 100,000 y más hab   | $882,310           | $945,379       | $63,069     |
 | 15,000 a 99,999 hab | $750,773           | $789,290       | $38,517     |
 | 2,500 a 14,999 hab  | $660,145           | $688,938       | $28,793     |
@@ -113,7 +99,7 @@ La gráfica de dispersión (en escala logarítmica) revela una relación positiv
 Se analizó la proporción de hogares que recurrieron a diferentes mecanismos para solventar emergencias financieras en los últimos 12 meses:
 
 | Tamaño de Localidad | Uso de Ahorros (%) | Ayuda Familiares (%) | Préstamos (%) |
-|---------------------|--------------------|----------------------|---------------|
+| ------------------- | ------------------ | -------------------- | ------------- |
 | 100,000 y más hab   | 2.40%              | 19.86%               | 10.57%        |
 | 15,000 a 99,999 hab | 3.75%              | 18.56%               | 13.31%        |
 | 2,500 a 14,999 hab  | 3.24%              | 12.91%               | 14.70%        |
@@ -121,21 +107,20 @@ Se analizó la proporción de hogares que recurrieron a diferentes mecanismos pa
 
 **(e) Interprete la gráfica y el tabulado.**
 
-1.  **Interpretación de la Riqueza (Inciso c):** La pendiente positiva de la línea de ajuste confirma que mayores ingresos permiten una mayor tasa de ahorro y acumulación de capital. No obstante, la persistencia de hogares con alta riqueza pero ingresos moderados sugiere la importancia de los activos no financieros (vivienda propia) en el balance de las familias mexicanas.
-2.  **Interpretación de Imprevistos (Inciso d):** Se observa una dependencia crítica de las redes de apoyo informal (familiares) en zonas urbanas y del crédito (posiblemente informal o de cajas de ahorro) en zonas rurales. El bajísimo porcentaje de uso de ahorros propios (menor al 4% en todos los estratos) evidencia una falta de fondos de emergencia, lo que hace al consumo de los hogares muy vulnerable ante choques negativos de ingreso o salud.
+1. **Interpretación de la Riqueza (Inciso c):** La pendiente positiva de la línea de ajuste confirma que mayores ingresos permiten una mayor tasa de ahorro y acumulación de capital. No obstante, la persistencia de hogares con alta riqueza pero ingresos moderados sugiere la importancia de los activos no financieros (vivienda propia) en el balance de las familias mexicanas.
+2. **Interpretación de Imprevistos (Inciso d):** Se observa una dependencia crítica de las redes de apoyo informal (familiares) en zonas urbanas y del crédito (posiblemente informal o de cajas de ahorro) en zonas rurales. El bajísimo porcentaje de uso de ahorros propios (menor al 4% en todos los estratos) evidencia una falta de fondos de emergencia, lo que hace al consumo de los hogares muy vulnerable ante choques negativos de ingreso o salud.
 
 ---
 
 ## Ejercicio 7: Acertijo del premio al riesgo
 
-### (a) Rendimientos de índices accionarios internacionales
+**(a) Consiga los valores anuales de IPC, el Indice de Precios y Cotizaciones de la Bolsa Mexicana de Valores, del NASDAQ y de otro índice de acciones (Ej 3: Canadá, TSX) por lo menos desde 1990.**
 
 Se obtuvieron los rendimientos anuales históricos (1990-2024) para el IPC (México), NASDAQ (EE. UU.) y el S&P/TSX Composite (Canadá).
 
-### (b) Rendimientos nominales anuales
+**(b) Calcule su tasa de retorno nominal para cada año.**
 
 Se calcularon los rendimientos nominales $r_{s,t}$ para cada índice a partir de la variación porcentual anual de sus niveles de cierre. En la siguiente gráfica se observa la evolución de los rendimientos nominales anuales para los tres índices analizados. Destaca la alta volatilidad del NASDAQ en comparación con el TSX y el IPC.
-
 
 \begin{center}
 ![Rendimientos Nominales Anuales (1990-2024)](output/grafica_7b_retornos.png)
@@ -148,11 +133,11 @@ Se calcularon los rendimientos nominales $r_{s,t}$ para cada índice a partir de
 
 Se utilizaron las tasas de Cetes a 28 días para México y las tasas de las Letras del Tesoro (T-Bills) a 3 meses para EE. UU. y Canadá. A continuación se presentan los promedios históricos para el periodo 1990-2024:
 
-| País | Instrumento de Deuda | Tasa de Interés Promedio (Anual) |
-|------|----------------------|----------------------------------|
-| México | Cetes 28 días | 11.85% |
-| EE. UU. | T-Bill 3 meses | 2.73% |
-| Canadá | T-Bill 3 meses | 3.29% |
+| País    | Instrumento de Deuda | Tasa de Interés Promedio (Anual) |
+| ------- | -------------------- | -------------------------------- |
+| México  | Cetes 28 días        | 11.85%                           |
+| EE. UU. | T-Bill 3 meses       | 2.73%                            |
+| Canadá  | T-Bill 3 meses       | 3.29%                            |
 
 La siguiente gráfica muestra la evolución de estas tasas:
 
@@ -167,41 +152,41 @@ La siguiente gráfica muestra la evolución de estas tasas:
 
 Se calculó el exceso de retorno o premio por riesgo medio para cada país ($E[r_s - r_f]$):
 
-| País | Premio por Riesgo Medio ($r_s - r_f$) |
-|------|---------------------------------------|
-| México | 6.41% |
-| EE. UU. | 12.28% |
-| Canadá | 3.26% |
+| País    | Premio por Riesgo Medio ($r_s - r_f$) |
+| ------- | ------------------------------------- |
+| México  | 6.41%                                 |
+| EE. UU. | 12.28%                                |
+| Canadá  | 3.26%                                 |
 
 **(e) Calcule la covarianza entre dicha diferencia y la tasa de crecimiento real del consumo agregado de cada economía.**
 
 Se obtuvo la covarianza entre el exceso de retorno y la tasa de crecimiento del consumo privado total:
 
-| País | Covarianza (Retorno, Consumo Total) |
-|------|------------------------------------|
-| México | 0.002025 |
-| EE. UU. | -0.000067 |
-| Canadá | 0.000336 |
+| País    | Covarianza (Retorno, Consumo Total) |
+| ------- | ----------------------------------- |
+| México  | 0.002025                            |
+| EE. UU. | -0.000067                           |
+| Canadá  | 0.000336                            |
 
 **(f) Calcule la covarianza entre dicha diferencia y la tasa de crecimiento real del consumo agregado de bienes durables y luego de servicios de cada economía.**
 
 Se desglosó el análisis de covarianza por tipo de consumo:
 
-| País | Covarianza (Bienes Durables) | Covarianza (Servicios) |
-|------|------------------------------|------------------------|
-| México | 0.004441 | 0.000409 |
-| EE. UU. | 0.002735 | -0.000699 |
-| Canadá | 0.001205 | 0.000176 |
+| País    | Covarianza (Bienes Durables) | Covarianza (Servicios) |
+| ------- | ---------------------------- | ---------------------- |
+| México  | 0.004441                     | 0.000409               |
+| EE. UU. | 0.002735                     | -0.000699              |
+| Canadá  | 0.001205                     | 0.000176               |
 
 **(g) Calcule el valor de aversión relativa al riesgo que implican estos números, dado el supuesto de una utilidad con forma ARRC.**
 
 Utilizando la fórmula $\gamma = \frac{E[r_s - r_f]}{\text{Cov}(r_s - r_f, \Delta c/c)}$, se obtuvieron los siguientes coeficientes:
 
-| País | $\gamma$ (Total) | $\gamma$ (Bienes Durables) | $\gamma$ (Servicios) |
-|------|------------------|---------------------------|----------------------|
-| México | 31.66 | **14.44** | 156.85 |
-| EE. UU. | -1837.19 | **44.91** | -175.70 |
-| Canadá | 97.17 | **27.07** | 185.06 |
+| País    | $\gamma$ (Total) | $\gamma$ (Bienes Durables) | $\gamma$ (Servicios) |
+| ------- | ---------------- | -------------------------- | -------------------- |
+| México  | 31.66            | **14.44**                  | 156.85               |
+| EE. UU. | -1837.19         | **44.91**                  | -175.70              |
+| Canadá  | 97.17            | **27.07**                  | 185.06               |
 
 \begin{center}
 ![Coeficientes Gamma por Tipo de Consumo](output/grafica_7e_gammas.png)
@@ -214,12 +199,14 @@ Utilizando la fórmula $\gamma = \frac{E[r_s - r_f]}{\text{Cov}(r_s - r_f, \Delt
 
 Los resultados obtenidos arrojan conclusiones fundamentales sobre el comportamiento del consumidor y la valoración de activos en las tres economías analizadas:
 
-1.  **Confirmación del "Equity Premium Puzzle" (Acertijo del Premio al Riesgo):** En los tres países observamos que el premio por riesgo (el exceso de rendimiento de las acciones sobre la tasa libre de riesgo) es sustancial. Sin embargo, la covarianza entre este exceso de rendimiento y el crecimiento del consumo agregado es muy baja. Bajo el marco teórico tradicional de utilidad esperada con aversión relativa al riesgo constante (ARRC), esto implica valores del coeficiente $\gamma$ extremadamente altos (superiores a 30 en México y Canadá). Dado que la literatura sugiere que niveles de $\gamma > 10$ son económicamente implausibles (implicarían que los individuos estarían dispuestos a ceder casi toda su riqueza para evitar riesgos mínimos), los resultados confirman empíricamente el acertijo: la "suavidad" del consumo agregado no puede justificar por qué el premio accionario es tan alto.
+1. **Confirmación del "Equity Premium Puzzle" (Acertijo del Premio al Riesgo):** En los tres países observamos que el premio por riesgo (el exceso de rendimiento de las acciones sobre la tasa libre de riesgo) es sustancial. Sin embargo, la covarianza entre este exceso de rendimiento y el crecimiento del consumo agregado es muy baja. Bajo el marco teórico tradicional de utilidad esperada con aversión relativa al riesgo constante (ARRC), esto implica valores del coeficiente $\gamma$ extremadamente altos (superiores a 30 en México y Canadá). Dado que la literatura sugiere que niveles de $\gamma > 10$ son económicamente implausibles (implicarían que los individuos estarían dispuestos a ceder casi toda su riqueza para evitar riesgos mínimos), los resultados confirman empíricamente el acertijo: la "suavidad" del consumo agregado no puede justificar por qué el premio accionario es tan alto.
 
-2.  **La Dicotomía entre Bienes Durables y Servicios:** Al desglosar el consumo, observamos que el acertijo es menos severo para los **bienes durables**. En los tres países, los valores de $\gamma$ calculados con el consumo de bienes durables ($\gamma \approx 14.4$ en México) son considerablemente menores que los calculados con servicios. Esto se debe a que el gasto en durables (automóviles, electrodomésticos) es más volátil, procíclico y correlaciona de mejor manera con los ciclos financieros; actúa en la práctica como una decisión de inversión que los hogares posponen en recesiones. En contraste, el consumo de **servicios** es muy inelástico y estable. Su covarianza casi nula con el mercado accionario dispara matemáticamente el valor de $\gamma$ hacia niveles astronómicos, demostrando que los servicios no son el margen de ajuste principal ante choques de riqueza.
+2. **La Dicotomía entre Bienes Durables y Servicios:** Al desglosar el consumo, observamos que el acertijo es menos severo para los **bienes durables**. En los tres países, los valores de $\gamma$ calculados con el consumo de bienes durables ($\gamma \approx 14.4$ en México) son considerablemente menores que los calculados con servicios. Esto se debe a que el gasto en durables (automóviles, electrodomésticos) es más volátil, procíclico y correlaciona de mejor manera con los ciclos financieros; actúa en la práctica como una decisión de inversión que los hogares posponen en recesiones. En contraste, el consumo de **servicios** es muy inelástico y estable. Su covarianza casi nula con el mercado accionario dispara matemáticamente el valor de $\gamma$ hacia niveles astronómicos, demostrando que los servicios no son el margen de ajuste principal ante choques de riqueza.
 
-3.  **El Caso Atípico de EE. UU. (NASDAQ):** El valor negativo de la covarianza (y por ende un $\gamma$ negativo) al utilizar el consumo de servicios en EE. UU. refleja que el sector tecnológico en ocasiones tiene dinámicas contracíclicas o desconectadas del consumo de servicios tradicionales (ej. durante la pandemia, el NASDAQ experimentó un auge mientras el consumo de servicios colapsaba).
+3. **El Caso Atípico de EE. UU. (NASDAQ):** El valor negativo de la covarianza (y por ende un $\gamma$ negativo) al utilizar el consumo de servicios en EE. UU. refleja que el sector tecnológico en ocasiones tiene dinámicas contracíclicas o desconectadas del consumo de servicios tradicionales (ej. durante la pandemia, el NASDAQ experimentó un auge mientras el consumo de servicios colapsaba).
 
-4.  **Implicaciones Macro-Financieras:** El fracaso del modelo estándar basado en el consumo agregado para generar niveles de $\gamma$ razonables indica que se requieren modelos más complejos. Extensiones teóricas como la **formación de hábitos** (los consumidores sufren mucho si el consumo cae respecto a su nivel pasado), el **riesgo idiosincrático no asegurable** o la **participación limitada en el mercado accionario** (fricciones financieras), son necesarias para reconciliar la macroeconomía del consumo con las finanzas empíricas.
+4. **Implicaciones Macro-Financieras:** El fracaso del modelo estándar basado en el consumo agregado para generar niveles de $\gamma$ razonables indica que se requieren modelos más complejos. Extensiones teóricas como la **formación de hábitos** (los consumidores sufren mucho si el consumo cae respecto a su nivel pasado), el **riesgo idiosincrático no asegurable** o la **participación limitada en el mercado accionario** (fricciones financieras), son necesarias para reconciliar la macroeconomía del consumo con las finanzas empíricas.
 
 ---
+
+
