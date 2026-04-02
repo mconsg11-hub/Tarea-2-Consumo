@@ -1,6 +1,21 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\vfill
+\begin{center}
+{\Huge \textbf{Ejercicio 5: Comportamiento reciente del consumo en México y sus determinantes}} \\
+\vspace{1cm}
+{\Large Autor: Brenda Evelyn Villegas García}
+\end{center}
+\vfill
+\newpage
 
 
-## 
 
 
 
@@ -10,13 +25,48 @@
 
 
 
-# <h2 align="center">Ejercicio 5: Comportamiento reciente del consumo en México y sus determinantes </h2>
 
 
 
-<div align="center">Autor: Brenda Evelyn Villegas García<div/>
 
-</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 **(a) Datos trimestrales de consumo agregado**
 
@@ -30,23 +80,17 @@ Se utilizaron las series del Sistema de Información Económica (SIE) de BANXICO
 
 En la siguiente gráfica se observa la evolución de los tres componentes del consumo. Destaca la caída pronunciada en el consumo de bienes importados durante las crisis de 2009 y 2020, evidenciando su alta sensibilidad a choques macroeconómicos.
 
-\begin{center}
+
 ![Comparación visual del consumo en niveles](output/grafica_5c_niveles.png)
-\end{center}
-\begin{center}
-\textit{Fuente: elaboración propia.}
-\end{center}
+
 
 **(d) Filtre todas las series para remover la tendencia por medio de obtener su tasa de cambio anual, grafique las series filtradas juntas para identificar sus movimientos cíclicos y obtenga su matriz de varianzas y covarianzas.**
 
 Se aplicó el filtro de tasa de crecimiento anual para aislar el componente cíclico. La volatilidad (desviación estándar) del consumo importado (11.38%) resultó ser significativamente mayor que la del consumo nacional (4.20%).
 
-\begin{center}
+
 ![Tasas de crecimiento anual (Ciclos)](output/grafica_5d_growth.png)
-\end{center}
-\begin{center}
-\textit{Fuente: elaboración propia.}
-\end{center}
+
 
 **Matriz de Varianza-Covarianza de las Tasas de Crecimiento:**
 
@@ -64,9 +108,18 @@ Con base en el análisis de correlaciones del componente cíclico (Filtro HP), s
 2. **Tasa de Interés Real:** Se observa una correlación positiva débil de **0.103**. Este resultado, aunque contraintuitivo respecto al efecto sustitución (que sugeriría una relación negativa), refleja la realidad de la economía mexicana donde los incrementos en la tasa real coinciden con periodos de expansión económica impulsados por la demanda externa. Además, sugiere que el **efecto ingreso** de los ahorradores o la expansión del crédito durante las fases de auge compensan el desincentivo al consumo presente derivado de mayores tasas.
 3. **Diferenciación por origen:** La volatilidad extrema del consumo importado confirma que este rubro actúa como el principal "amortiguador" del gasto de los hogares ante choques en el tipo de cambio y las condiciones financieras internacionales.
 
----
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\vfill
+\begin{center}
+{\Huge \textbf{Ejercicio 6: Nivel de riqueza neta de los hogares (ENFIH-2019)}} \\
+\vspace{1cm}
+{\Large Autor: Brenda Evelyn Villegas García}
+\end{center}
+\vfill
+\newpage
 
-## Ejercicio 6: Nivel de riqueza neta de los hogares (ENFIH-2019)
 
 **(a) Baje los microdatos de la ENFIH del sitio del INEGI.**
 
@@ -87,12 +140,9 @@ Se calculó la riqueza neta media ponderada por el factor de expansión (`FAC_HO
 
 La gráfica de dispersión (en escala logarítmica) revela una relación positiva y significativa entre el ingreso mensual y la riqueza neta. Sin embargo, existe una alta dispersión en los niveles bajos de ingreso, lo que sugiere que factores como la herencia o la antigüedad del hogar (teoría del ciclo de vida) juegan un papel crucial en la acumulación de activos.
 
-\begin{center}
+
 ![Relación Ingreso vs Riqueza Neta](output/grafica_6c_dispersion.png)
-\end{center}
-\begin{center}
-\textit{Fuente: elaboración propia.}
-\end{center}
+
 
 **(d) Haga un tabulado de las respuestas sobre la forma en que atienden gastos imprevistos, de acuerdo al tamaño de la localidad en la que radican.**
 
@@ -110,9 +160,18 @@ Se analizó la proporción de hogares que recurrieron a diferentes mecanismos pa
 1. **Interpretación de la Riqueza (Inciso c):** La pendiente positiva de la línea de ajuste confirma que mayores ingresos permiten una mayor tasa de ahorro y acumulación de capital. No obstante, la persistencia de hogares con alta riqueza pero ingresos moderados sugiere la importancia de los activos no financieros (vivienda propia) en el balance de las familias mexicanas.
 2. **Interpretación de Imprevistos (Inciso d):** Se observa una dependencia crítica de las redes de apoyo informal (familiares) en zonas urbanas y del crédito (posiblemente informal o de cajas de ahorro) en zonas rurales. El bajísimo porcentaje de uso de ahorros propios (menor al 4% en todos los estratos) evidencia una falta de fondos de emergencia, lo que hace al consumo de los hogares muy vulnerable ante choques negativos de ingreso o salud.
 
----
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\vfill
+\begin{center}
+{\Huge \textbf{Ejercicio 7: Acertijo del premio al riesgo}} \\
+\vspace{1cm}
+{\Large Autor: Brenda Evelyn Villegas García}
+\end{center}
+\vfill
+\newpage
 
-## Ejercicio 7: Acertijo del premio al riesgo
 
 **(a) Consiga los valores anuales de IPC, el Indice de Precios y Cotizaciones de la Bolsa Mexicana de Valores, del NASDAQ y de otro índice de acciones (Ej 3: Canadá, TSX) por lo menos desde 1990.**
 
@@ -122,12 +181,9 @@ Se obtuvieron los rendimientos anuales históricos (1990-2024) para el IPC (Méx
 
 Se calcularon los rendimientos nominales $r_{s,t}$ para cada índice a partir de la variación porcentual anual de sus niveles de cierre. En la siguiente gráfica se observa la evolución de los rendimientos nominales anuales para los tres índices analizados. Destaca la alta volatilidad del NASDAQ en comparación con el TSX y el IPC.
 
-\begin{center}
+
 ![Rendimientos Nominales Anuales (1990-2024)](output/grafica_7b_retornos.png)
-\end{center}
-\begin{center}
-\textit{Fuente: elaboración propia.}
-\end{center}
+
 
 **(c) Consiga los valores promedio anual de la tasa de interés de la tasa de interés a un año, para el periodo que esté disponible, para los tres países.**
 
@@ -141,12 +197,9 @@ Se utilizaron las tasas de Cetes a 28 días para México y las tasas de las Letr
 
 La siguiente gráfica muestra la evolución de estas tasas:
 
-\begin{center}
+
 ![Evolución de las Tasas Libres de Riesgo (1990-2024)](output/grafica_7c_rf.png)
-\end{center}
-\begin{center}
-\textit{Fuente: elaboración propia.}
-\end{center}
+
 
 **(d) Calcule la diferencia entre el retorno del mercado de valores y el retorno de invertir a la tasa a un año, para el periodo que esté disponible, para los tres países.**
 
@@ -188,12 +241,9 @@ Utilizando la fórmula $\gamma = \frac{E[r_s - r_f]}{\text{Cov}(r_s - r_f, \Delt
 | EE. UU. | -1837.19         | **44.91**                  | -175.70              |
 | Canadá  | 97.17            | **27.07**                  | 185.06               |
 
-\begin{center}
+
 ![Coeficientes Gamma por Tipo de Consumo](output/grafica_7e_gammas.png)
-\end{center}
-\begin{center}
-\textit{Fuente: elaboración propia.}
-\end{center}
+
 
 **(j) Interprete sus resultados.**
 
