@@ -113,7 +113,7 @@ Se calcularon los rendimientos nominales $r_{s,t}$ para cada índice a partir de
 
 ![Rendimientos Nominales Anuales (1990-2024)](output/grafica_7b_retornos.png)
 
-**(c) Consiga los valores promedio anual de la tasa de interés de la tasa de interés a la que el gobierno de cada país se presta dinero, para los tres países.**
+**(c) Consiga los valores promedio anual de la tasa de interés de la tasa de interés a un año, para el periodo que esté disponible, para los tres países.**
 
 Se utilizaron las tasas de Cetes a 28 días para México y las tasas de las Letras del Tesoro (T-Bills) a 3 meses para EE. UU. y Canadá. A continuación se presentan los promedios históricos para el periodo 1990-2024:
 
@@ -123,40 +123,62 @@ Se utilizaron las tasas de Cetes a 28 días para México y las tasas de las Letr
 | EE. UU. | T-Bill 3 meses | 2.73% |
 | Canadá | T-Bill 3 meses | 3.29% |
 
-La siguiente gráfica muestra la evolución de estas tasas, donde se aprecia la mayor volatilidad y nivel de la tasa mexicana, especialmente durante la crisis de 1995 y el periodo reciente de inflación elevada.
+La siguiente gráfica muestra la evolución de estas tasas:
 
 ![Evolución de las Tasas Libres de Riesgo (1990-2024)](output/grafica_7c_rf.png)
 
-**(d) Calcule la diferencia entre el retorno del mercado de valores y el retorno de invertir
-a la tasa a un año.**
+**(d) Calcule la diferencia entre el retorno del mercado de valores y el retorno de invertir a la tasa a un año, para el periodo que esté disponible, para los tres países.**
 
-Se calculó el exceso de retorno o premio por riesgo medio para cada país, definido como el rendimiento del mercado accionario por encima de la tasa libre de riesgo gubernamental ($E[r_s - r_f]$). A continuación, se comparan estos valores con la tasa de crecimiento promedio del consumo real de los hogares:
+Se calculó el exceso de retorno o premio por riesgo medio para cada país ($E[r_s - r_f]$):
 
-| País | Premio por Riesgo Medio ($r_s - r_f$) | Crecimiento del Consumo Real ($\Delta c/c$) |
-|------|---------------------------------------|-------------------------------------------|
-| México | 6.41% | 2.58% |
-| EE. UU. | 12.28% | 2.66% |
-| Canadá | 3.26% | 2.48% |
+| País | Premio por Riesgo Medio ($r_s - r_f$) |
+|------|---------------------------------------|
+| México | 6.41% |
+| EE. UU. | 12.28% |
+| Canadá | 3.26% |
 
-Se observa que en todos los casos el premio por riesgo es significativamente superior a la tasa de crecimiento del consumo, siendo especialmente alta la brecha en EE. UU. (NASDAQ), donde el premio por riesgo es casi **4.6 veces mayor** que el crecimiento del consumo.
+**(e) Calcule la covarianza entre dicha diferencia y la tasa de crecimiento real del consumo agregado de cada economía.**
 
-**(e) Calcule el valor de aversión relativa al riesgo que implican estos números, dado el supuesto de una utilidad con forma ARRC.**
+Se obtuvo la covarianza entre el exceso de retorno y la tasa de crecimiento del consumo privado total:
 
-Utilizando la fórmula del *Equity Premium Puzzle*:
-$$\gamma = \frac{E[r_s - r_f]}{\text{Cov}(r_s - r_f, \Delta c/c)}$$
+| País | Covarianza (Retorno, Consumo Total) |
+|------|------------------------------------|
+| México | 0.002025 |
+| EE. UU. | -0.000067 |
+| Canadá | 0.000336 |
 
-Los coeficientes de aversión al riesgo relativo ($\gamma$) obtenidos son:
+**(f) Calcule la covarianza entre dicha diferencia y la tasa de crecimiento real del consumo agregado de bienes durables y luego de servicios de cada economía.**
 
-| País | Premio por Riesgo Medio ($E[r_s - r_f]$) | Covarianza ($r_s - r_f, \Delta c/c$) | Coeficiente $\gamma$ Estimado |
-|------|------------------------------------------|--------------------------------------|-------------------------------|
-| México | 6.41% | 0.002025 | **31.66** |
-| Canadá | 3.26% | 0.000336 | **97.17** |
-| EE. UU. (NASDAQ) | 12.28% | -0.000067 | **-1837.19** |
+Se desglosó el análisis de covarianza por tipo de consumo:
 
-**(f) Interprete sus resultados.**
+| País | Covarianza (Bienes Durables) | Covarianza (Servicios) |
+|------|------------------------------|------------------------|
+| México | 0.004441 | 0.000409 |
+| EE. UU. | 0.002735 | -0.000699 |
+| Canadá | 0.001205 | 0.000176 |
 
-1.  **Confirmación del Acertijo:** En el caso de México ($\gamma = 31.66$) y Canadá ($\gamma = 97.17$), los valores de aversión al riesgo son extremadamente altos. La teoría económica tradicional considera que un valor de $\gamma > 10$ es difícil de justificar psicológicamente, ya que implicaría que los individuos están dispuestos a pagar sumas absurdas por evitar riesgos mínimos. Esto confirma la presencia del **Equity Premium Puzzle** en estas economías: el consumo es "demasiado suave" para explicar por qué las acciones pagan tanto más que los bonos.
-2.  **El Caso del NASDAQ:** El valor negativo obtenido para el NASDAQ se debe a una covarianza negativa en la muestra anual. Esto indica que el modelo de utilidad CRRA estándar tiene dificultades para capturar la dinámica de activos de crecimiento (growth) como los tecnológicos, los cuales pueden subir incluso cuando el consumo se contrae (ej. durante la digitalización forzada en la pandemia de 2020).
-3.  **Conclusión:** Los resultados sugieren que el modelo básico de consumo basado en activos financieros es insuficiente para explicar las primas de riesgo observadas, lo que apunta a la necesidad de considerar otros factores como fricciones de mercado, costos de transacción o preferencias no separables.
+**(g) Calcule el valor de aversión relativa al riesgo que implican estos números, dado el supuesto de una utilidad con forma ARRC.**
+
+Utilizando la fórmula $\gamma = \frac{E[r_s - r_f]}{\text{Cov}(r_s - r_f, \Delta c/c)}$, se obtuvieron los siguientes coeficientes:
+
+| País | $\gamma$ (Total) | $\gamma$ (Bienes Durables) | $\gamma$ (Servicios) |
+|------|------------------|---------------------------|----------------------|
+| México | 31.66 | **14.44** | 156.85 |
+| EE. UU. | -1837.19 | **44.91** | -175.70 |
+| Canadá | 97.17 | **27.07** | 185.06 |
+
+![Coeficientes Gamma por Tipo de Consumo](output/grafica_7e_gammas.png)
+
+**(j) Interprete sus resultados.**
+
+Los resultados obtenidos arrojan conclusiones fundamentales sobre el comportamiento del consumidor y la valoración de activos en las tres economías analizadas:
+
+1.  **Confirmación del "Equity Premium Puzzle" (Acertijo del Premio al Riesgo):** En los tres países observamos que el premio por riesgo (el exceso de rendimiento de las acciones sobre la tasa libre de riesgo) es sustancial. Sin embargo, la covarianza entre este exceso de rendimiento y el crecimiento del consumo agregado es muy baja. Bajo el marco teórico tradicional de utilidad esperada con aversión relativa al riesgo constante (ARRC), esto implica valores del coeficiente $\gamma$ extremadamente altos (superiores a 30 en México y Canadá). Dado que la literatura sugiere que niveles de $\gamma > 10$ son económicamente implausibles (implicarían que los individuos estarían dispuestos a ceder casi toda su riqueza para evitar riesgos mínimos), los resultados confirman empíricamente el acertijo: la "suavidad" del consumo agregado no puede justificar por qué el premio accionario es tan alto.
+
+2.  **La Dicotomía entre Bienes Durables y Servicios:** Al desglosar el consumo, observamos que el acertijo es menos severo para los **bienes durables**. En los tres países, los valores de $\gamma$ calculados con el consumo de bienes durables ($\gamma \approx 14.4$ en México) son considerablemente menores que los calculados con servicios. Esto se debe a que el gasto en durables (automóviles, electrodomésticos) es más volátil, procíclico y correlaciona de mejor manera con los ciclos financieros; actúa en la práctica como una decisión de inversión que los hogares posponen en recesiones. En contraste, el consumo de **servicios** es muy inelástico y estable. Su covarianza casi nula con el mercado accionario dispara matemáticamente el valor de $\gamma$ hacia niveles astronómicos, demostrando que los servicios no son el margen de ajuste principal ante choques de riqueza.
+
+3.  **El Caso Atípico de EE. UU. (NASDAQ):** El valor negativo de la covarianza (y por ende un $\gamma$ negativo) al utilizar el consumo de servicios en EE. UU. refleja que el sector tecnológico en ocasiones tiene dinámicas contracíclicas o desconectadas del consumo de servicios tradicionales (ej. durante la pandemia, el NASDAQ experimentó un auge mientras el consumo de servicios colapsaba).
+
+4.  **Implicaciones Macro-Financieras:** El fracaso del modelo estándar basado en el consumo agregado para generar niveles de $\gamma$ razonables indica que se requieren modelos más complejos. Extensiones teóricas como la **formación de hábitos** (los consumidores sufren mucho si el consumo cae respecto a su nivel pasado), el **riesgo idiosincrático no asegurable** o la **participación limitada en el mercado accionario** (fricciones financieras), son necesarias para reconciliar la macroeconomía del consumo con las finanzas empíricas.
 
 ---
